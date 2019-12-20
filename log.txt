@@ -1,0 +1,10 @@
+@Mrwang_tju  2019.12.20
+Motor driver for STM32F405RG
+
+
+2019.12.20
+0.cube初始化配置代码  PWM ADC  DAC(限流)  USART Encoder  LED
+1.测试硬件电路  --上电  代码下载  测试基础功能
+2.git仓库初始化  同步
+3.CAN总线测试
+
