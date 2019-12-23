@@ -31,6 +31,11 @@
 "motordriver\stm32f4xx_hal.o"
 "motordriver\stm32f4xx_hal_exti.o"
 "motordriver\system_stm32f4xx.o"
+"motordriver\tim_ctrl.o"
+"motordriver\motor.o"
+"motordriver\protocol.o"
+"motordriver\stmflash.o"
+"motordriver\com.o"
 --library_type=microlib --strict --scatter "motorDriver\motorDriver.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

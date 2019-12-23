@@ -21,6 +21,9 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
+#include "./../User/com.h"	//包含上层文件  回调函数
+
+uint8_t RXBuffer[1];
 
 /* USER CODE END 0 */
 
@@ -105,6 +108,18 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 } 
 
 /* USER CODE BEGIN 1 */
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+/* Prevent unused argument(s) compilation warning */
+UNUSED(huart);
+
+HAL_UART_Receive_IT(huart, (uint8_t *)RXBuffer, 1); //再打开中断接收
+	if(huart==&huart2)	{
+		USART2Interrupt(RXBuffer[0]);
+		RXBuffer[0]=0xFF;
+	}
+}
+
 
 /* USER CODE END 1 */
 

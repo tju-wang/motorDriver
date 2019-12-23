@@ -2,13 +2,19 @@
 Motor driver for STM32F405RG
 
 
-2019.12.20
+
+
+2019.12.20  &  12.22
 0.cube初始化配置代码  PWM ADC  DAC(限流)  USART Encoder  LED
 1.测试硬件电路  --上电  代码下载  测试基础功能
 2.git仓库初始化  同步
 3.CAN总线测试  can  LBK引脚没接   
 RS  低电平 	can高速模式
 	高电平	低电流仅监听模式
+	
+驱动芯片
+nSLEEP  0  	失能
+		1	使能
 
 
 

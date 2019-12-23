@@ -37,3 +37,13 @@ motordriver\usart.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 motordriver\usart.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 motordriver\usart.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 motordriver\usart.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
+motordriver\usart.o: ../Src/./../User/com.h
+motordriver\usart.o: ../Src/./../User/include.h
+motordriver\usart.o: ../Inc/gpio.h
+motordriver\usart.o: ../Inc/tim.h
+motordriver\usart.o: ../Src/./../User/tim_ctrl.h
+motordriver\usart.o: ../Src/./../User/include.h
+motordriver\usart.o: ../Src/./../User/motor.h
+motordriver\usart.o: ../Src/./../User/stmflash.h
+motordriver\usart.o: ../Inc/adc.h
+motordriver\usart.o: ../Src/./../User/protocol.h
