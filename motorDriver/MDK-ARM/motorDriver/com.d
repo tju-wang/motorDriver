@@ -39,11 +39,12 @@ motordriver\com.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 motordriver\com.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 motordriver\com.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 motordriver\com.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
+motordriver\com.o: ../Inc/./../User/include.h
 motordriver\com.o: ../Inc/tim.h
 motordriver\com.o: ..\User\tim_ctrl.h
-motordriver\com.o: ..\User\include.h
 motordriver\com.o: ../Inc/usart.h
 motordriver\com.o: ..\User\motor.h
 motordriver\com.o: ..\User\stmflash.h
 motordriver\com.o: ../Inc/adc.h
 motordriver\com.o: ..\User\protocol.h
+motordriver\com.o: ..\User\com.h

@@ -40,7 +40,7 @@
 
 Motor_t M1;
 unsigned long int IRQ_Counter = 0;
-
+extern float outAdcData[2];	//外部两路adc值
 
 //定时器中断控制函数
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)	
@@ -55,6 +55,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			IRQ_Counter = 0;
 		
 		EncoderUpdate(&M1,htim3);
+		GetOutAdc(outAdcData);
 	}
 }
 

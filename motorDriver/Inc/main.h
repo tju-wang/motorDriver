@@ -32,7 +32,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "./../User/include.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -97,7 +97,12 @@ void Error_Handler(void);
 #define ID3_Pin GPIO_PIN_6
 #define ID3_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
+void startUp(void);
+void EncoderClear(void);
+void CtrlStruct_Init(void);
+void ParaInit(void);
 
+void clearArr(unsigned char *arr,unsigned int len);
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

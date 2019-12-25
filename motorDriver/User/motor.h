@@ -10,8 +10,8 @@
 
 char setPWMAitClockwise(unsigned int pwm);		//一路PWM   一路高电平
 char setPWMClockwise(unsigned int pwm);		//一路PWM   一路高电平
-char setFullPWM();
-char setZeroPWM();
+char setFullPWM(void);
+char setZeroPWM(void);
 
 
 #endif

@@ -1,5 +1,17 @@
 #include "protocol.h"
 
+extern Motor_t M1;
+extern DAC_HandleTypeDef hdac;
+unsigned char UartFeedBackData[DataFdbkNum];
+extern unsigned int gErrorStatus;
+
+
+extern void    FLASH_PageErase(uint32_t PageAddress);
+static FLASH_EraseInitTypeDef EraseInitStruct;
+extern uint32_t FLASH_Address,PageError;
+extern unsigned int FLASH_Store[FLASHSIZE];
+extern unsigned int FLASH_Init[FLASHSIZE];
+
 //解析电脑返回的力的数据
 //char AnalysisForce(unsigned char *data)
 //{
@@ -112,4 +124,209 @@ void BoardEn(char ch)
 	else 	{
 		HAL_GPIO_WritePin(EnMotor_GPIO_Port,EnMotor_Pin,GPIO_PIN_RESET);
 	}
+}
+
+char MotorDataFdbk(unsigned char ch)
+{
+	switch(ch)	
+	{
+		case CTL_EncoderFDBK:	{
+			EncoderPWMFdbk();
+		}break;
+		case CTL_DAC_ADCFDBK:	{
+			DacAdcVlueFdbk();
+		}break;
+		case CTL_SensorDataFDBK:	{
+			//SensorFdbk(CTL_SensorDataFDBK);
+		}break;
+		case CTL_SensorPWMFDBK:	{
+			//SensorFdbk(CTL_SensorPWMFDBK);
+		}
+		case FORCE_SWITCHFDBK:	{
+			//ForceSwitchFdbk();
+		}break;
+	}
+	return HAL_OK;
+}
+char EncoderPWMFdbk(void)
+{
+	unsigned char numm1,numm2,numm3,numm4;
+	
+	ClearArr(UartFeedBackData,DataFdbkNum);
+	UartFeedBackData[0] = 0x7B;
+	UartFeedBackData[1]	= CTL_EncoderFDBK;
+	DataLong2Char(&numm1,&numm2,&numm3,&numm4,M1.EnCounter);
+	UartFeedBackData[2]	= (unsigned char)numm1; 
+	UartFeedBackData[3] = (unsigned char)numm2;
+	UartFeedBackData[4]	= (unsigned char)numm3;	
+	UartFeedBackData[5]	= (unsigned char)numm4;	
+	//pwm部分
+	UartFeedBackData[6] = (unsigned char)((float)(TIM1->CCR1)/100.0f);
+	UartFeedBackData[7] = (unsigned char)((TIM1->CCR1)%100);
+
+	UartFeedBackData[8] = (unsigned char)((float)(TIM1->CCR2)/100.0f);
+	UartFeedBackData[9] = (unsigned char)((TIM1->CCR2)%100);
+	UartFeedBackData[10]= (unsigned char)0;
+	UartFeedBackData[12]=  0;
+	UartFeedBackData[13]= 0;
+	
+	return (UartSendData(UartFeedBackData,DataFdbkNum));		//发送数据
+}
+
+char DacAdcVlueFdbk(void)
+{
+	unsigned int tempDAC = 0;
+	ClearArr(UartFeedBackData,DataFdbkNum);
+	UartFeedBackData[0] = 0x7B;
+	UartFeedBackData[1]	= CTL_DAC_ADCFDBK;
+	
+	tempDAC = HAL_DAC_GetValue(&hdac,DAC_CHANNEL_2);
+	
+	UartFeedBackData[2]	= (unsigned char)((float)tempDAC/100.f); 
+	UartFeedBackData[3] = (unsigned char)(tempDAC%100);
+
+	//adc返回
+	UartFeedBackData[4] = 0;
+	//pwm部分
+//	UartFeedBackData[5] = (unsigned char)((float)(TIM1->CCR1)/100.0f);
+//	UartFeedBackData[6] = (unsigned char)((TIM1->CCR1)%100);
+
+//	UartFeedBackData[7] = (unsigned char)((float)(TIM1->CCR2)/100.0f);
+//	UartFeedBackData[8] = (unsigned char)((TIM1->CCR2)%100);
+	UartFeedBackData[11]= (unsigned char)0;
+	UartFeedBackData[12]=  0;
+	UartFeedBackData[13]= 0;
+	
+	return (UartSendData(UartFeedBackData,DataFdbkNum));		//发送数据
+}
+
+void FlashChange(unsigned int data,unsigned int num)
+{
+	unsigned char mm;
+//		(unsigned int)(UartRxData[1]%100+UartRxData[2]/100);	//分高低位
+		//检测 初始化FLASH的值
+		if(num>4)	{	//小于4 不允许修改
+			for(mm=0;mm<FLASHSIZE;mm++)	{
+				FLASH_Store[mm] = (*(unsigned int *)(FLASH_USER_START_ADDR+4*mm));	//mm为定位变量
+			}
+			mm = num-1;
+			FLASH_Store[mm] = data;
+		
+			HAL_FLASH_Unlock();
+			EraseInitStruct.Banks=FLASH_BANK_1;
+			EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
+			EraseInitStruct.Sector = FLASH_SECTOR_6;	//擦除扇区1  参考原子代码
+			EraseInitStruct.NbSectors = 1;
+			EraseInitStruct.VoltageRange=FLASH_VOLTAGE_RANGE_3;	//电压范围区间  2.7~3.6V之间
+			
+		if (HAL_FLASHEx_Erase(&EraseInitStruct, &PageError) == HAL_OK)	{
+			STMFLASH_Write(FLASH_USER_START_ADDR,(u32*)FLASH_Store,FLASHSIZE);
+		}
+		else	{
+			gErrorStatus |= Error_FLASHErash;
+		}
+		HAL_FLASH_Lock();	//上锁
+	
+	}
+}
+
+void FlashInit(void)
+{
+	HAL_FLASH_Unlock();
+	
+	EraseInitStruct.Banks=FLASH_BANK_1;
+	EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
+	EraseInitStruct.Sector = FLASH_SECTOR_6;	//擦除扇区1  参考原子代码
+	EraseInitStruct.NbSectors = 1;
+	EraseInitStruct.VoltageRange=FLASH_VOLTAGE_RANGE_3;	//电压范围区间  2.7~3.6V之间
+	
+	
+	if (HAL_FLASHEx_Erase(&EraseInitStruct, &PageError) == HAL_OK)	{
+		STMFLASH_Write(FLASH_USER_START_ADDR,(u32*)FLASH_Init,FLASHSIZE);
+	}
+	else	{
+		gErrorStatus |= Error_FLASHErash;
+	}
+	HAL_FLASH_Lock();	//上锁
+	
+}
+void FlashFDBK(char num)
+{
+	char mm = 0,part;
+	unsigned char numm1,numm2,ii;
+	int Summ;
+	if(num>0&&num<=6)
+		part = 1;
+	else if(num>6&&num<=12)
+		part = 2;
+	else if(num>12&&num<=18)
+		part = 3;
+	else if(num>18&&num<=24)
+		part = 4;
+	
+	for(mm=0;mm<FLASHSIZE;mm++)	{
+				FLASH_Store[mm] = (*(unsigned int *)(FLASH_USER_START_ADDR+4*mm));	//mm为定位变量
+			}
+		if(part>0&&part<5)	{	//part 1-4
+			
+			for(mm=0;mm<6;mm++)	{
+				DataCoverInt2Char(&numm1,&numm2,(int)FLASH_Store[(part-1)*6 + mm]);
+				UartFeedBackData[mm*2+2]	= (unsigned char)numm1; 
+				UartFeedBackData[mm*2+3] = (unsigned char)numm2;
+			}
+		
+			}
+		else	{
+			for(mm=0;mm<6;mm++)	{
+				UartFeedBackData[mm*2+2]= (unsigned char)0; 
+				UartFeedBackData[mm*2+3] = (unsigned char)0;
+			}
+		}
+	
+		UartFeedBackData[0] = 0x7B;
+		UartFeedBackData[1]	= 0x30;		//FLASH回读
+		Summ = 0;
+		for(ii=1; ii<DataFdbkNum-2;ii++)	{
+			Summ +=UartFeedBackData[ii];
+		}
+		Summ = Summ%100;
+		UartFeedBackData[14] = Summ;
+		UartFeedBackData[15] = 0x7D;
+		
+		HAL_UART_Transmit(&huart2, (uint8_t *)&UartFeedBackData, DataFdbkNum, 0xFFFF);
+}
+void DataCoverInt2Char(unsigned char *pNum1,unsigned char *pNum2,int pNum_Int)
+{
+	if(pNum_Int<0)	//unaigned int
+	{
+		pNum_Int = -pNum_Int;
+	}
+	*pNum1 = (unsigned char)(pNum_Int/256);
+	*pNum2 = (unsigned char)(pNum_Int%256);
+}
+
+//清除数组
+void ClearArr(unsigned char *data,unsigned int len)
+{
+	while(len--)
+	{
+		(*data++) = 0;
+	}
+}
+
+//返回数据   将long型数据转换为协议想要的格式
+void DataLong2Char(unsigned char *pNum1,unsigned char *pNum2,unsigned char *pNum3,unsigned char *pNum4,long int Data)
+{
+	if(Data<0)
+	{
+		Data = -Data;
+		*pNum1 = (unsigned char)(Data/16777216);	
+		*pNum1 = *pNum1 | 0x80;
+	}
+	else	{
+		*pNum1 = (unsigned char)(Data/16777216);
+	}
+	*pNum2 = (unsigned char)((float)(Data%16777216)/65536);
+	*pNum3 = (unsigned char)(Data%65536/256);
+	*pNum4 = (unsigned char)(Data%256);
 }

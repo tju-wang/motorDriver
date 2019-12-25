@@ -36,3 +36,13 @@ motordriver\stm32f4xx_hal_msp.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_h
 motordriver\stm32f4xx_hal_msp.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 motordriver\stm32f4xx_hal_msp.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 motordriver\stm32f4xx_hal_msp.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
+motordriver\stm32f4xx_hal_msp.o: ../Inc/./../User/include.h
+motordriver\stm32f4xx_hal_msp.o: ../Inc/gpio.h
+motordriver\stm32f4xx_hal_msp.o: ../Inc/main.h
+motordriver\stm32f4xx_hal_msp.o: ../Inc/tim.h
+motordriver\stm32f4xx_hal_msp.o: ../Inc/./../User/tim_ctrl.h
+motordriver\stm32f4xx_hal_msp.o: ../Inc/./../User/include.h
+motordriver\stm32f4xx_hal_msp.o: ../Inc/usart.h
+motordriver\stm32f4xx_hal_msp.o: ../Inc/./../User/motor.h
+motordriver\stm32f4xx_hal_msp.o: ../Inc/./../User/stmflash.h
+motordriver\stm32f4xx_hal_msp.o: ../Inc/adc.h

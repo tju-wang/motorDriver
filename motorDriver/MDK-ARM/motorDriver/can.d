@@ -37,3 +37,13 @@ motordriver\can.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 motordriver\can.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 motordriver\can.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 motordriver\can.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
+motordriver\can.o: ../Inc/./../User/include.h
+motordriver\can.o: ../Inc/gpio.h
+motordriver\can.o: ../Inc/main.h
+motordriver\can.o: ../Inc/tim.h
+motordriver\can.o: ../Inc/./../User/tim_ctrl.h
+motordriver\can.o: ../Inc/./../User/include.h
+motordriver\can.o: ../Inc/usart.h
+motordriver\can.o: ../Inc/./../User/motor.h
+motordriver\can.o: ../Inc/./../User/stmflash.h
+motordriver\can.o: ../Inc/adc.h

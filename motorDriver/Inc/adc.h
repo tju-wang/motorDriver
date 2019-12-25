@@ -41,6 +41,9 @@ void MX_ADC1_Init(void);
 void MX_ADC3_Init(void);
 
 /* USER CODE BEGIN Prototypes */
+char Adc3Read(unsigned int *adc,unsigned int len);
+char GetAdc3(float *data,int len);
+char GetOutAdc(float *sensorData);
 
 /* USER CODE END Prototypes */
 

@@ -1,5 +1,7 @@
 #include "com.h"
 
+extern DAC_HandleTypeDef hdac;
+
 //通讯硬件部分  数据收发
 static unsigned char Uart_counter = 0;  //计数
 static char UartStartFlag = 0;
@@ -11,7 +13,7 @@ void USART2Interrupt(char UartRxBuf)		//参数  状态控制串口
 {
 	static unsigned char i =0;	
 	static unsigned int scheck = 0;
-
+	unsigned int tempValue = 0;
 	if(UartRxBuf=='}')	{
 		if(Uart_counter==9) 	{
 			scheck = 0;
@@ -51,42 +53,28 @@ void USART2Interrupt(char UartRxBuf)		//参数  状态控制串口
 					{
 						setZeroPWM();
 					}
-					
+				}break;
+				case CMD_DACSET:
+				{
+					tempValue = UartRxData[2]*100+UartRxData[3];
+					if(tempValue<=4095)	{  //判断DAC取值范围
+						HAL_DAC_SetValue(&hdac,DAC_CHANNEL_2,DAC_ALIGN_12B_R,tempValue);	//设置DAC输出
+					}
 					
 				}break;
 				case CMD_FDBK:	{
-					switch(UartRxData[2])	
-					{
-						case CTL_EncoderFDBK:	{
-							//EncoderFdbk();
-						}break;
-						case CTL_GriverForceFDBK:	{
-							
-						}break;
-						case CMD_PWMFDBK:	{
-							//MotorPWMFdbk();
-						}break;
-						case CTL_SensorDataFDBK:	{
-							//SensorFdbk(CTL_SensorDataFDBK);
-						}break;
-						case CTL_SensorPWMFDBK:	{
-							//SensorFdbk(CTL_SensorPWMFDBK);
-						}
-						case FORCE_SWITCHFDBK:	{
-							//ForceSwitchFdbk();
-						}break;
-					}
+					MotorDataFdbk(UartRxData[2]);
 				}break;
 				case CMD_FLASH:	{
 					switch(UartRxData[2])	{
 						case CTL_FLASHCHANGE:	{
-							//FlashChange((UartRxData[4]*256+UartRxData[5]),UartRxData[3]);
+							FlashChange((UartRxData[4]*256+UartRxData[5]),UartRxData[3]);
 						}break;
 						case CTL_FLASHFDBK:	{
-							//FlashFDBK(UartRxData[3]);
+							FlashFDBK(UartRxData[3]);
 						}break;
 						case CTL_FLASHINIT:	{
-							//FlashInit();
+							FlashInit();
 						}break;
 						default :
 							break;
@@ -131,7 +119,22 @@ void USART2Interrupt(char UartRxBuf)		//参数  状态控制串口
 	}
 }
 
-
+//对长度与 DataFdbkNum 相等的做数据校验  不相等直接发送
+char UartSendData(unsigned char *data,unsigned int len)
+{
+	unsigned int i,summ = 0;
+	if(len==DataFdbkNum)
+	{
+		for(i=1;i<DataFdbkNum-2;)	{
+			summ += data[i++];
+		}
+		summ = summ%100;
+		data[14] = summ;
+		data[0]  = 0x7B;
+		data[15] = 0x7D;
+	}
+	return (HAL_UART_Transmit(&huart2, (uint8_t *)data, len, 0xFFFF));
+}
 
 
 

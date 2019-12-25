@@ -56,6 +56,46 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 extern uint8_t RXBuffer[1];
+extern Motor_t M1;
+
+unsigned int gErrorStatus;	//全局变量   用来显示错误提示
+uint32_t FLASH_Address = 0, PageError = 0;
+__IO uint32_t data32 = 0 , MemoryProgramStatus = 0;
+
+unsigned int FLASH_Store[FLASHSIZE];	//修改FLASH时临时存储数组
+unsigned int FLASH_Init[FLASHSIZE]={
+	1,	//产品型号											1
+	01,	//软件版本											2
+	00,	//机械结构版本										3
+	01,	//电路硬件版本										4
+	
+//状态参数
+	0,	//PWMMID-ui  	电机零扭力参考PWM值					5
+	0,	//PULL_PWM-ui	电机同向推拉时 增加的pwm值			6
+	0,	//SigPWMPulse-ui 检测到转动后  单电机摩擦力补偿		7
+	0,	//StopPwm-ui	检测到静止时  正反向的摩擦力波动	8
+	0,	//PLPH_Para_k-f	推拉随速度变化力补偿值 一次函数 k值	9
+	0,	//PLPH_Para_b-i										10
+			//return (float)(0.PLPH_Para_k*sp+PLPH_Para_b);  返回本项计算PWM值
+	0,	//Griver_Para-f	  重力补偿  电机力 mN 和 PWM之间的对应关系	11								
+	0,	//InertiaPara-f   惯性力计算 与加速度相乘的系数		12
+	0,	//Sensor_Para
+	
+	0,	//Smooth_Para		14
+	
+	0,//sensor_P-f		15	
+	0,//sensor_I-f		16
+	0,//sensor_D-f		17
+	0,
+
+	
+	0x00,	//HardWare Version	29
+	0x00,	//SoftWare Version	30
+	0x00,	//HardWare Version	29
+	0x00,	//SoftWare Version	30
+	0x00,	//HardWare Version	29
+	0x00	//SoftWare Version	30
+};
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -125,7 +165,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_UART_Receive_IT(&huart2, (uint8_t *)RXBuffer, 1); //打开中断接收
   
-  HAL_DAC_SetValue(&hdac,DAC_CHANNEL_2,DAC_ALIGN_12B_R,2048);	//设置DAC输出
+  HAL_DAC_SetValue(&hdac,DAC_CHANNEL_2,DAC_ALIGN_12B_R,4000);	//设置DAC输出
   HAL_DAC_Start(&hdac,DAC1_CHANNEL_2);
   
   HAL_TIM_Base_Start_IT(&htim3);
@@ -133,7 +173,7 @@ int main(void)
   HAL_GPIO_WritePin(EnMotor_GPIO_Port,EnMotor_Pin,GPIO_PIN_SET);
   
   TIM1->CCR1 = 0;
-  TIM1->CCR2 = 120;
+  TIM1->CCR2 = 0;
   HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_2);
   
@@ -203,6 +243,38 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+void ParaInit(void)
+{
+	EncoderClear();
+	
+	char mm,Flag_blank = 0;	//FLASH是否为空白  标志
+	int Flash_Value;
+//	 HAL_StatusTypeDef FlashStatus=HAL_OK;
+	FLASH_Address = FLASH_USER_START_ADDR;
+	for(mm=0;mm<FLASHSIZE;mm++)	{
+			Flash_Value = *(int*)(FLASH_USER_START_ADDR+(mm)*4);
+			if((Flash_Value==-1)&&(Flag_blank==0))
+				Flag_blank = 0;		//此FLASH区域为空白
+			else 	{
+				Flag_blank = 1;  //非空白	
+				break;
+			}
+		}
+	if(Flag_blank==0)	{
+		STMFLASH_Write(FLASH_USER_START_ADDR,(u32*)FLASH_Init,FLASHSIZE);
+	}
+}
+
+
+void EncoderClear(void)
+{
+	//结构体初始化
+	M1.EnCounter = M1.EnOverflowNum = 0;
+	__HAL_TIM_SET_COUNTER(&htim3,0);
+	//溢出值需要清零 在打开TIM3中断后会进入一次全局中断
+	M1.EnOverflowNum= 0;
+}
+
 
 /* USER CODE END 4 */
 

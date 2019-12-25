@@ -21,6 +21,12 @@
 #include "adc.h"
 
 /* USER CODE BEGIN 0 */
+#define ADC_OUT_NUM			2
+#define ADC_OUT_ARR_2		3
+#define	ADC_OUT_ARR			6
+
+float outAdcData[2];	//外部两路adc值
+
 
 /* USER CODE END 0 */
 
@@ -37,15 +43,15 @@ void MX_ADC1_Init(void)
   hadc1.Instance = ADC1;
   hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
   hadc1.Init.Resolution = ADC_RESOLUTION_12B;
-  hadc1.Init.ScanConvMode = DISABLE;
+  hadc1.Init.ScanConvMode = ENABLE;
   hadc1.Init.ContinuousConvMode = DISABLE;
   hadc1.Init.DiscontinuousConvMode = DISABLE;
   hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
   hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-  hadc1.Init.NbrOfConversion = 1;
+  hadc1.Init.NbrOfConversion = 2;
   hadc1.Init.DMAContinuousRequests = DISABLE;
-  hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  hadc1.Init.EOCSelection = ADC_EOC_SEQ_CONV;
   if (HAL_ADC_Init(&hadc1) != HAL_OK)
   {
     Error_Handler();
@@ -54,7 +60,15 @@ void MX_ADC1_Init(void)
   */
   sConfig.Channel = ADC_CHANNEL_8;
   sConfig.Rank = 1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
+  sConfig.SamplingTime = ADC_SAMPLETIME_144CYCLES;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
+  */
+  sConfig.Channel = ADC_CHANNEL_9;
+  sConfig.Rank = 2;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
     Error_Handler();
@@ -71,15 +85,15 @@ void MX_ADC3_Init(void)
   hadc3.Instance = ADC3;
   hadc3.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
   hadc3.Init.Resolution = ADC_RESOLUTION_12B;
-  hadc3.Init.ScanConvMode = DISABLE;
+  hadc3.Init.ScanConvMode = ENABLE;
   hadc3.Init.ContinuousConvMode = DISABLE;
   hadc3.Init.DiscontinuousConvMode = DISABLE;
   hadc3.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
   hadc3.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc3.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-  hadc3.Init.NbrOfConversion = 1;
+  hadc3.Init.NbrOfConversion = 2;
   hadc3.Init.DMAContinuousRequests = DISABLE;
-  hadc3.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  hadc3.Init.EOCSelection = ADC_EOC_SEQ_CONV;
   if (HAL_ADC_Init(&hadc3) != HAL_OK)
   {
     Error_Handler();
@@ -88,7 +102,15 @@ void MX_ADC3_Init(void)
   */
   sConfig.Channel = ADC_CHANNEL_0;
   sConfig.Rank = 1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
+  sConfig.SamplingTime = ADC_SAMPLETIME_480CYCLES;
+  if (HAL_ADC_ConfigChannel(&hadc3, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
+  */
+  sConfig.Channel = ADC_CHANNEL_1;
+  sConfig.Rank = 2;
   if (HAL_ADC_ConfigChannel(&hadc3, &sConfig) != HAL_OK)
   {
     Error_Handler();
@@ -188,7 +210,65 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
 } 
 
 /* USER CODE BEGIN 1 */
-
+//传感器数据采样   返回用作控制的adc的值
+/*
+转换时间： (56 cycles + 12) *3 *3 / 21M  = 29.14 us
+*/
+char GetOutAdc(float *sensorData)  //传入两个数组
+{
+	int cnt = 0;
+	char status = HAL_OK;
+	status = GetAdc3(sensorData,2);
+	
+	return status;
+}
+//返回平均后的三路adc的值
+char GetAdc3(float *data,int len)
+{
+	float adc[ADC_OUT_ARR];	//两组
+	unsigned int adcTemp[ADC_OUT_NUM];	//临时存储数据
+	float adcSum[ADC_OUT_NUM] = {0};
+	int i = 0;
+	int cnt = 0;
+	for(cnt=0;cnt<ADC_OUT_ARR_2;cnt++)
+	{
+		if(Adc3Read(&adcTemp[0],2)==HAL_OK)
+		{
+			for(i=0;i<ADC_OUT_NUM;i++)
+			{
+				adc[cnt*ADC_OUT_NUM+i] = adcTemp[i];
+			}
+		}
+		else	{
+			return HAL_ERROR;
+		}
+	}
+	for(cnt=0;cnt<ADC_OUT_ARR;cnt++)
+	{
+		adcSum[cnt%ADC_OUT_NUM] += adc[cnt];
+	}
+	for(cnt=0;cnt<ADC_OUT_NUM;cnt++)
+	{
+		data[cnt] = adcSum[cnt]/ADC_OUT_ARR_2;
+	}
+	return HAL_OK;
+}
+//触发单次的adc转换   单次转换一遍
+char Adc3Read(unsigned int *adc,unsigned int len)
+{
+	int cnt = 0;
+	for(cnt=0;cnt<len;cnt++)
+	{
+		HAL_ADC_Start(&hadc3);
+		if(HAL_ADC_PollForConversion(&hadc3,0xFF)==HAL_OK)	//一次转换一组  需要读取三次数据
+		{
+			adc[cnt] = HAL_ADC_GetValue(&hadc3);
+		}
+		else
+			return HAL_ERROR;
+	}
+	return HAL_OK;
+}
 /* USER CODE END 1 */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

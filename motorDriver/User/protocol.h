@@ -3,12 +3,26 @@
 
 
 #include "include.h"
+#include "com.h"
+//#include "./../User/tim_ctrl.h"
+
+#define Error_FLASHErash		(1<<20)	//第20位  置1表示FLASH擦除错误
 
 #define	RECEIVE_SIZE	25		//单片机接受协议长度
 #define	SEND_SIZE		14		//单片机发送协议长度
 
 void BoardEn(char ch);
+char EncoderPWMFdbk(void);
+char DacAdcVlueFdbk(void);
+void ClearArr(unsigned char *data,unsigned int len);
+char MotorDataFdbk(unsigned char ch);
 
+void FlashFDBK(char num);
+void FlashInit(void);
+void FlashChange(unsigned int data,unsigned int num);
+
+void DataCoverInt2Char(unsigned char *pNum1,unsigned char *pNum2,int pNum_Int);
+void DataLong2Char(unsigned char *pNum1,unsigned char *pNum2,unsigned char *pNum3,unsigned char *pNum4,long int Data);
 /*************协议相关宏****************/
 /*
 #define		READPoleLen			0x30		//读取杆长
