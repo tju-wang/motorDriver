@@ -101,6 +101,7 @@ void startUp(void);
 void EncoderClear(void);
 void CtrlStruct_Init(void);
 void ParaInit(void);
+void StartUp(void);
 
 void clearArr(unsigned char *arr,unsigned int len);
 /* USER CODE END Private defines */

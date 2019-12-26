@@ -45,6 +45,10 @@ char Adc3Read(unsigned int *adc,unsigned int len);
 char GetAdc3(float *data,int len);
 char GetOutAdc(float *sensorData);
 
+char Adc1Read(unsigned int *adc,unsigned int len);
+char GetAdc1(float *data,int len);
+char GetCurrAdc(float *sensorData);
+
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

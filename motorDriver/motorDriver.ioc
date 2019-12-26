@@ -1,7 +1,7 @@
 #MicroXplorer Configuration settings - do not modify
 ADC1.Channel-0\#ChannelRegularConversion=ADC_CHANNEL_8
 ADC1.Channel-1\#ChannelRegularConversion=ADC_CHANNEL_9
-ADC1.EOCSelection=ADC_EOC_SEQ_CONV
+ADC1.EOCSelection=ADC_EOC_SINGLE_CONV
 ADC1.IPParameters=Rank-0\#ChannelRegularConversion,master,Channel-0\#ChannelRegularConversion,SamplingTime-0\#ChannelRegularConversion,NbrOfConversionFlag,EOCSelection,Rank-1\#ChannelRegularConversion,Channel-1\#ChannelRegularConversion,SamplingTime-1\#ChannelRegularConversion,NbrOfConversion
 ADC1.NbrOfConversion=2
 ADC1.NbrOfConversionFlag=1
@@ -12,8 +12,9 @@ ADC1.SamplingTime-1\#ChannelRegularConversion=ADC_SAMPLETIME_144CYCLES
 ADC1.master=1
 ADC3.Channel-0\#ChannelRegularConversion=ADC_CHANNEL_0
 ADC3.Channel-1\#ChannelRegularConversion=ADC_CHANNEL_1
-ADC3.EOCSelection=ADC_EOC_SEQ_CONV
-ADC3.IPParameters=Rank-0\#ChannelRegularConversion,Channel-0\#ChannelRegularConversion,SamplingTime-0\#ChannelRegularConversion,NbrOfConversionFlag,EOCSelection,Rank-1\#ChannelRegularConversion,Channel-1\#ChannelRegularConversion,SamplingTime-1\#ChannelRegularConversion,NbrOfConversion
+ADC3.EOCSelection=ADC_EOC_SINGLE_CONV
+ADC3.IPParameters=Rank-0\#ChannelRegularConversion,Channel-0\#ChannelRegularConversion,SamplingTime-0\#ChannelRegularConversion,NbrOfConversionFlag,EOCSelection,Rank-1\#ChannelRegularConversion,Channel-1\#ChannelRegularConversion,SamplingTime-1\#ChannelRegularConversion,NbrOfConversion,InjNumberOfConversion
+ADC3.InjNumberOfConversion=0
 ADC3.NbrOfConversion=2
 ADC3.NbrOfConversionFlag=1
 ADC3.Rank-0\#ChannelRegularConversion=1

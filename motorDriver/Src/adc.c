@@ -26,6 +26,8 @@
 #define	ADC_OUT_ARR			6
 
 float outAdcData[2];	//外部两路adc值
+float currAdcData[2];	//currAdcData[0]为未滤波adc值   currAdcData[1]为滤波之后的adc值
+float tempValue[10];
 
 
 /* USER CODE END 0 */
@@ -51,7 +53,7 @@ void MX_ADC1_Init(void)
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
   hadc1.Init.NbrOfConversion = 2;
   hadc1.Init.DMAContinuousRequests = DISABLE;
-  hadc1.Init.EOCSelection = ADC_EOC_SEQ_CONV;
+  hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
   if (HAL_ADC_Init(&hadc1) != HAL_OK)
   {
     Error_Handler();
@@ -93,7 +95,7 @@ void MX_ADC3_Init(void)
   hadc3.Init.DataAlign = ADC_DATAALIGN_RIGHT;
   hadc3.Init.NbrOfConversion = 2;
   hadc3.Init.DMAContinuousRequests = DISABLE;
-  hadc3.Init.EOCSelection = ADC_EOC_SEQ_CONV;
+  hadc3.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
   if (HAL_ADC_Init(&hadc3) != HAL_OK)
   {
     Error_Handler();
@@ -216,7 +218,7 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
 */
 char GetOutAdc(float *sensorData)  //传入两个数组
 {
-	int cnt = 0;
+//	int cnt = 0;
 	char status = HAL_OK;
 	status = GetAdc3(sensorData,2);
 	
@@ -263,12 +265,73 @@ char Adc3Read(unsigned int *adc,unsigned int len)
 		if(HAL_ADC_PollForConversion(&hadc3,0xFF)==HAL_OK)	//一次转换一组  需要读取三次数据
 		{
 			adc[cnt] = HAL_ADC_GetValue(&hadc3);
+			tempValue[cnt] = adc[cnt];
 		}
 		else
 			return HAL_ERROR;
 	}
 	return HAL_OK;
 }
+
+
+//获取电流adc数据
+char GetCurrAdc(float *sensorData)  //传入两个数组
+{
+//	int cnt = 0;
+	char status = HAL_OK;
+	status = GetAdc1(sensorData,2);
+	
+	return status;
+}
+//返回平均后的两路adc的值
+char GetAdc1(float *data,int len)
+{
+	float adc[ADC_OUT_ARR];	//两组
+	unsigned int adcTemp[ADC_OUT_NUM];	//临时存储数据
+	float adcSum[ADC_OUT_NUM] = {0};
+	int i = 0;
+	int cnt = 0;
+	for(cnt=0;cnt<ADC_OUT_ARR_2;cnt++)
+	{
+		if(Adc1Read(&adcTemp[0],2)==HAL_OK)
+		{
+			for(i=0;i<ADC_OUT_NUM;i++)
+			{
+				adc[cnt*ADC_OUT_NUM+i] = adcTemp[i];
+			}
+		}
+		else	{
+			return HAL_ERROR;
+		}
+	}
+	for(cnt=0;cnt<ADC_OUT_ARR;cnt++)
+	{
+		adcSum[cnt%ADC_OUT_NUM] += adc[cnt];
+	}
+	for(cnt=0;cnt<ADC_OUT_NUM;cnt++)
+	{
+		data[cnt] = adcSum[cnt]/ADC_OUT_ARR_2;
+	}
+	return HAL_OK;
+}
+//触发单次的adc转换   单次转换一遍  内部电流adc
+char Adc1Read(unsigned int *adc,unsigned int len)
+{
+	int cnt = 0;
+	for(cnt=0;cnt<len;cnt++)
+	{
+		HAL_ADC_Start(&hadc1);
+		if(HAL_ADC_PollForConversion(&hadc1,0xFF)==HAL_OK)	//一次转换一组  需要读取三次数据
+		{
+			adc[cnt] = HAL_ADC_GetValue(&hadc1);
+			tempValue[cnt] = adc[cnt];
+		}
+		else
+			return HAL_ERROR;
+	}
+	return HAL_OK;
+}
+
 /* USER CODE END 1 */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

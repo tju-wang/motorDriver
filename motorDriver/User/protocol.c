@@ -12,6 +12,10 @@ extern uint32_t FLASH_Address,PageError;
 extern unsigned int FLASH_Store[FLASHSIZE];
 extern unsigned int FLASH_Init[FLASHSIZE];
 
+//adc数据
+extern float outAdcData[2];	//外部两路adc值
+extern float currAdcData[2];	//内部  电流adc值
+
 //解析电脑返回的力的数据
 //char AnalysisForce(unsigned char *data)
 //{
@@ -186,14 +190,16 @@ char DacAdcVlueFdbk(void)
 	UartFeedBackData[3] = (unsigned char)(tempDAC%100);
 
 	//adc返回
-	UartFeedBackData[4] = 0;
-	//pwm部分
-//	UartFeedBackData[5] = (unsigned char)((float)(TIM1->CCR1)/100.0f);
-//	UartFeedBackData[6] = (unsigned char)((TIM1->CCR1)%100);
+	UartFeedBackData[4] = (unsigned char)((float)outAdcData[0]/100.0f);
+	UartFeedBackData[5] = (unsigned char)((unsigned int)outAdcData[0]%100);
+	UartFeedBackData[6] = (unsigned char)((float)outAdcData[1]/100.0f);
+	UartFeedBackData[7] = (unsigned char)((unsigned int)outAdcData[1]%100);
+	
+	UartFeedBackData[8] = (unsigned char)((float)currAdcData[0]/100.0f);
+	UartFeedBackData[9] = (unsigned char)((unsigned char)currAdcData[0]%100);
+	UartFeedBackData[10] = (unsigned char)((float)currAdcData[1]/100.0f);
+	UartFeedBackData[11] = (unsigned char)((unsigned char)currAdcData[1]%100);
 
-//	UartFeedBackData[7] = (unsigned char)((float)(TIM1->CCR2)/100.0f);
-//	UartFeedBackData[8] = (unsigned char)((TIM1->CCR2)%100);
-	UartFeedBackData[11]= (unsigned char)0;
 	UartFeedBackData[12]=  0;
 	UartFeedBackData[13]= 0;
 	

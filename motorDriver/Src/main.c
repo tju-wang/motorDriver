@@ -163,25 +163,7 @@ int main(void)
   MX_TIM14_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-  HAL_UART_Receive_IT(&huart2, (uint8_t *)RXBuffer, 1); //打开中断接收
-  
-  HAL_DAC_SetValue(&hdac,DAC_CHANNEL_2,DAC_ALIGN_12B_R,4000);	//设置DAC输出
-  HAL_DAC_Start(&hdac,DAC1_CHANNEL_2);
-  
-  HAL_TIM_Base_Start_IT(&htim3);
- 
-  HAL_GPIO_WritePin(EnMotor_GPIO_Port,EnMotor_Pin,GPIO_PIN_SET);
-  
-  TIM1->CCR1 = 0;
-  TIM1->CCR2 = 0;
-  HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_1);
-  HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_2);
-  
-	//中断定时器
-  HAL_TIM_Base_Start_IT(&htim14);	//开启500us中断
-  
-  
-  
+  StartUp();
   
   /* USER CODE END 2 */
 
@@ -243,6 +225,29 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+void StartUp(void)
+{
+	ParaInit();
+	
+	HAL_UART_Receive_IT(&huart2, (uint8_t *)RXBuffer, 1); //打开中断接收
+
+	HAL_DAC_SetValue(&hdac,DAC_CHANNEL_2,DAC_ALIGN_12B_R,4000);	//设置DAC输出
+	HAL_DAC_Start(&hdac,DAC1_CHANNEL_2);
+
+	HAL_TIM_Base_Start_IT(&htim3);
+
+	HAL_GPIO_WritePin(EnMotor_GPIO_Port,EnMotor_Pin,GPIO_PIN_SET);
+	M1.motor_id = GetID();
+	
+	TIM1->CCR1 = 0;
+	TIM1->CCR2 = 0;
+	HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_2);
+
+	//中断定时器
+	HAL_TIM_Base_Start_IT(&htim14);	//开启500us中断
+}
+
 void ParaInit(void)
 {
 	EncoderClear();

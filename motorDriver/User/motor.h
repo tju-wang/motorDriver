@@ -7,6 +7,7 @@
 #define CLOCKWISE		0x21
 #define ANTICLOCKWISE	0x22
 #define	MOTORSTOP		0x20
+#define	REDUCTION		62
 
 char setPWMAitClockwise(unsigned int pwm);		//一路PWM   一路高电平
 char setPWMClockwise(unsigned int pwm);		//一路PWM   一路高电平
