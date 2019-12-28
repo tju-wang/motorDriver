@@ -65,6 +65,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 unsigned char MotorState(Motor_t *pMotor)	//电机状态监测  改变runstate及speed值  计算加速度值
 {
 	long long int Sum1,Sum2;
+	float speedSum1,speedSum2;
 	char parr,kk;
 	parr = pMotor->pArr+EncoderStoreNum;	//在每一次编码器值更新的时候  pArr ++ 
 	Sum1 = Sum2 = 0;
@@ -96,16 +97,18 @@ unsigned char MotorState(Motor_t *pMotor)	//电机状态监测  改变runstate及speed值 
 	if(pMotor->speed<0)	pMotor->speed = -pMotor->speed;	 //推拉  慢速 速度大约0x50->80  快速推拉 速度约0x210 -> 528
 	//计算加速度
 	parr = pMotor->pSpArr+EncoderStoreNum;	//在每一次编码器值更新的时候  pArr ++ 
-	Sum1 = Sum2 = 0;
+	speedSum1 = speedSum2 = 0;
 	for(kk=0; kk<5; kk++)	{
-		Sum1 += pMotor->MoterSpeedArr[(parr-kk)%EncoderStoreNum];
-		Sum2 += pMotor->MoterSpeedArr[(parr+kk+11)%EncoderStoreNum];
+		speedSum1 += pMotor->MoterSpeedArr[(parr-kk)%EncoderStoreNum];
+		speedSum2 += pMotor->MoterSpeedArr[(parr+kk+11)%EncoderStoreNum];
 	}
-	if(Sum2>60||(Sum2<-60))	{	//低速检测  0x20 * 5 	
-		pMotor->accelration = Sum1-Sum2;	//计算加速度 抵消惯性项  保留加速度方向
+	pMotor->accelration = (speedSum1 - speedSum2)*2000/(5*15.0f);	//单位  rpm/s
+	if(pMotor->accelration<0)	{
+		pMotor->accelration = -pMotor->accelration;
+		pMotor->accDir = -1;
 	}
-	else	{
-		pMotor->accelration = 0;
+	else {
+		pMotor->accDir = 1;
 	}
 	return 1;
 	

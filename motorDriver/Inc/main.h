@@ -68,9 +68,6 @@ void Error_Handler(void);
 #define EncoderA_GPIO_Port GPIOA
 #define EncoderB_Pin GPIO_PIN_7
 #define EncoderB_GPIO_Port GPIOA
-#define EncoderI_Pin GPIO_PIN_4
-#define EncoderI_GPIO_Port GPIOC
-#define EncoderI_EXTI_IRQn EXTI4_IRQn
 #define ADC1Cur_Pin GPIO_PIN_0
 #define ADC1Cur_GPIO_Port GPIOB
 #define ADC2FCur_Pin GPIO_PIN_1
@@ -92,10 +89,13 @@ void Error_Handler(void);
 #define CAN_RS_GPIO_Port GPIOB
 #define ID1_Pin GPIO_PIN_4
 #define ID1_GPIO_Port GPIOB
+#define ID1_EXTI_IRQn EXTI4_IRQn
 #define ID2_Pin GPIO_PIN_5
 #define ID2_GPIO_Port GPIOB
+#define ID2_EXTI_IRQn EXTI9_5_IRQn
 #define ID3_Pin GPIO_PIN_6
 #define ID3_GPIO_Port GPIOB
+#define ID3_EXTI_IRQn EXTI9_5_IRQn
 /* USER CODE BEGIN Private defines */
 void startUp(void);
 void EncoderClear(void);

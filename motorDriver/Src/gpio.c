@@ -45,20 +45,14 @@ void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, EnMotor_Pin|LED1_Pin|LED2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(CAN_RS_GPIO_Port, CAN_RS_Pin, GPIO_PIN_SET);
-
-  /*Configure GPIO pin : PtPin */
-  GPIO_InitStruct.Pin = EncoderI_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(EncoderI_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PtPin */
   GPIO_InitStruct.Pin = FAU_Pin;
@@ -89,7 +83,7 @@ void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : PBPin PBPin PBPin */
   GPIO_InitStruct.Pin = ID1_Pin|ID2_Pin|ID3_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 

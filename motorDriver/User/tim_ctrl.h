@@ -18,9 +18,10 @@ typedef struct Motor{
 	signed long int EnCoterArr[EncoderStoreNum];	//计算速度用
 	signed char runstate;	//1 正转 -1 反转 0 静止  以编码器读值变大的方向为正
 	float speed;		//电机速度
-	signed int MoterSpeedArr[EncoderStoreNum];
+	float MoterSpeedArr[EncoderStoreNum];
 	char pSpArr;
 	float accelration;	//电机加速度
+	signed char accDir;		//加速与减速方向   -1  减速   1  加速
 	unsigned char motor_id;
 	
 }Motor_t;
