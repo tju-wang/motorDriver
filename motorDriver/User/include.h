@@ -1,6 +1,8 @@
 #ifndef __INCLUDE_H
 #define __INCLUDE_H
 
+//typedef (unsigned char) uchar;
+
 
 /*************************** FLASH  Address **************************************************/
 #define FLASH_SECTOR_SIZE          (0x2000U)	//sector ด๓ะกฮช128k

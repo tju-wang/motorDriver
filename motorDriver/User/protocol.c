@@ -155,7 +155,9 @@ char MotorDataFdbk(unsigned char ch)
 char EncoderPWMFdbk(void)
 {
 	unsigned char numm1,numm2,numm3,numm4;
-	
+	unsigned char state = 0;
+	state = M1.runstate;
+	state |= (M1.accDir<<2);
 	ClearArr(UartFeedBackData,DataFdbkNum);
 	UartFeedBackData[0] = 0x7B;
 	UartFeedBackData[1]	= CTL_EncoderFDBK;
@@ -170,10 +172,14 @@ char EncoderPWMFdbk(void)
 
 	UartFeedBackData[8] = (unsigned char)((float)(TIM1->CCR2)/100.0f);
 	UartFeedBackData[9] = (unsigned char)((TIM1->CCR2)%100);
-	UartFeedBackData[10]= (unsigned char)0;
-	UartFeedBackData[12]=  0;
-	UartFeedBackData[13]= 0;
-	
+
+	//方向  速度  加速度部分  
+	UartFeedBackData[10]= (unsigned char)state;
+	UartFeedBackData[11]= (unsigned char)((int)M1.speed);
+	UartFeedBackData[12]= (unsigned char)((unsigned int)(M1.speed*100)%100);
+	UartFeedBackData[13]= (unsigned char)(M1.accelration*10);
+	UartFeedBackData[14]= (unsigned char)((unsigned int)(M1.accelration*1000)%100);
+
 	return (UartSendData(UartFeedBackData,DataFdbkNum));		//发送数据
 }
 

@@ -7,6 +7,11 @@
 #define 	ENCODER_NUM		(int)(65535)
 #define		ENCODER_NUM_2	((int)(ENCODER_NUM/2.0f))
 #define StateRef			(0.5f)	//转动或静止  参考计数值
+#define ACCE_NUM			(20)	//加速度常数  加速度更新时间  单位 ms   <10  加速度值浮动范围较大  >50 加速度更新频率过慢
+#define	ACCEN_NUM			(100)	//与加速度常数之  积  为 2000
+
+#define DEBUG_DATA_NUM		(2000)
+#define DebugFreq			(10)
 
 
 typedef struct Motor{

@@ -3,7 +3,7 @@
 <title>Static Call Graph - [motorDriver\motorDriver.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image motorDriver\motorDriver.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Sat Dec 28 20:59:25 2019
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Sun Dec 29 12:10:34 2019
 <BR><P>
 <H3>Maximum Stack Usage =        256 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -553,8 +553,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_PeriodElapsedCallback
 </UL>
 
-<P><STRONG><a name="[74]"></a>EncoderPWMFdbk</STRONG> (Thumb, 164 bytes, Stack size 32 bytes, protocol.o(i.EncoderPWMFdbk))
-<BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = EncoderPWMFdbk &rArr; UartSendData &rArr; HAL_UART_Transmit &rArr; UART_WaitOnFlagUntilTimeout
+<P><STRONG><a name="[74]"></a>EncoderPWMFdbk</STRONG> (Thumb, 254 bytes, Stack size 40 bytes, protocol.o(i.EncoderPWMFdbk))
+<BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = EncoderPWMFdbk &rArr; UartSendData &rArr; HAL_UART_Transmit &rArr; UART_WaitOnFlagUntilTimeout
 </UL>
 <BR>[Calls]<UL><LI><a href="#[72]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UartSendData
 <LI><a href="#[75]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DataLong2Char
@@ -1210,7 +1210,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[ce]"></a>HAL_UART_IRQHandler</STRONG> (Thumb, 266 bytes, Stack size 16 bytes, stm32f4xx_hal_uart.o(i.HAL_UART_IRQHandler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = HAL_UART_IRQHandler &rArr; UART_Receive_IT &rArr; HAL_UART_RxCpltCallback &rArr; USART2Interrupt &rArr; MotorDataFdbk &rArr; EncoderPWMFdbk &rArr; UartSendData &rArr; HAL_UART_Transmit &rArr; UART_WaitOnFlagUntilTimeout
+<BR><BR>[Stack]<UL><LI>Max Depth = 168<LI>Call Chain = HAL_UART_IRQHandler &rArr; UART_Receive_IT &rArr; HAL_UART_RxCpltCallback &rArr; USART2Interrupt &rArr; MotorDataFdbk &rArr; EncoderPWMFdbk &rArr; UartSendData &rArr; HAL_UART_Transmit &rArr; UART_WaitOnFlagUntilTimeout
 </UL>
 <BR>[Calls]<UL><LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_TxCpltCallback
 <LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_ErrorCallback
@@ -1248,7 +1248,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[d8]"></a>HAL_UART_RxCpltCallback</STRONG> (Thumb, 32 bytes, Stack size 8 bytes, usart.o(i.HAL_UART_RxCpltCallback))
-<BR><BR>[Stack]<UL><LI>Max Depth = 136<LI>Call Chain = HAL_UART_RxCpltCallback &rArr; USART2Interrupt &rArr; MotorDataFdbk &rArr; EncoderPWMFdbk &rArr; UartSendData &rArr; HAL_UART_Transmit &rArr; UART_WaitOnFlagUntilTimeout
+<BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = HAL_UART_RxCpltCallback &rArr; USART2Interrupt &rArr; MotorDataFdbk &rArr; EncoderPWMFdbk &rArr; UartSendData &rArr; HAL_UART_Transmit &rArr; UART_WaitOnFlagUntilTimeout
 </UL>
 <BR>[Calls]<UL><LI><a href="#[da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART2Interrupt
 <LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_Receive_IT
@@ -1379,7 +1379,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f405xx.o(RESET)
 </UL>
 <P><STRONG><a name="[ea]"></a>MotorDataFdbk</STRONG> (Thumb, 38 bytes, Stack size 8 bytes, protocol.o(i.MotorDataFdbk))
-<BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = MotorDataFdbk &rArr; EncoderPWMFdbk &rArr; UartSendData &rArr; HAL_UART_Transmit &rArr; UART_WaitOnFlagUntilTimeout
+<BR><BR>[Stack]<UL><LI>Max Depth = 112<LI>Call Chain = MotorDataFdbk &rArr; EncoderPWMFdbk &rArr; UartSendData &rArr; HAL_UART_Transmit &rArr; UART_WaitOnFlagUntilTimeout
 </UL>
 <BR>[Calls]<UL><LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EncoderPWMFdbk
 <LI><a href="#[6f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DacAdcVlueFdbk
@@ -1387,7 +1387,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART2Interrupt
 </UL>
 
-<P><STRONG><a name="[cd]"></a>MotorState</STRONG> (Thumb, 366 bytes, Stack size 24 bytes, tim_ctrl.o(i.MotorState))
+<P><STRONG><a name="[cd]"></a>MotorState</STRONG> (Thumb, 374 bytes, Stack size 24 bytes, tim_ctrl.o(i.MotorState))
 <BR><BR>[Stack]<UL><LI>Max Depth = 44<LI>Call Chain = MotorState &rArr; __aeabi_l2f &rArr; _float_epilogue
 </UL>
 <BR>[Calls]<UL><LI><a href="#[64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_l2f
@@ -1494,7 +1494,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[da]"></a>USART2Interrupt</STRONG> (Thumb, 278 bytes, Stack size 24 bytes, com.o(i.USART2Interrupt))
-<BR><BR>[Stack]<UL><LI>Max Depth = 128<LI>Call Chain = USART2Interrupt &rArr; MotorDataFdbk &rArr; EncoderPWMFdbk &rArr; UartSendData &rArr; HAL_UART_Transmit &rArr; UART_WaitOnFlagUntilTimeout
+<BR><BR>[Stack]<UL><LI>Max Depth = 136<LI>Call Chain = USART2Interrupt &rArr; MotorDataFdbk &rArr; EncoderPWMFdbk &rArr; UartSendData &rArr; HAL_UART_Transmit &rArr; UART_WaitOnFlagUntilTimeout
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ee]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DAC_SetValue
 <LI><a href="#[f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setZeroPWM
@@ -1510,7 +1510,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[30]"></a>USART2_IRQHandler</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, stm32f4xx_it.o(i.USART2_IRQHandler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = USART2_IRQHandler &rArr; HAL_UART_IRQHandler &rArr; UART_Receive_IT &rArr; HAL_UART_RxCpltCallback &rArr; USART2Interrupt &rArr; MotorDataFdbk &rArr; EncoderPWMFdbk &rArr; UartSendData &rArr; HAL_UART_Transmit &rArr; UART_WaitOnFlagUntilTimeout
+<BR><BR>[Stack]<UL><LI>Max Depth = 168<LI>Call Chain = USART2_IRQHandler &rArr; HAL_UART_IRQHandler &rArr; UART_Receive_IT &rArr; HAL_UART_RxCpltCallback &rArr; USART2Interrupt &rArr; MotorDataFdbk &rArr; EncoderPWMFdbk &rArr; UartSendData &rArr; HAL_UART_Transmit &rArr; UART_WaitOnFlagUntilTimeout
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_IRQHandler
 </UL>
@@ -1609,7 +1609,7 @@ Local Symbols
 </UL>
 
 <P><STRONG><a name="[cf]"></a>UART_Receive_IT</STRONG> (Thumb, 150 bytes, Stack size 8 bytes, stm32f4xx_hal_uart.o(i.UART_Receive_IT))
-<BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = UART_Receive_IT &rArr; HAL_UART_RxCpltCallback &rArr; USART2Interrupt &rArr; MotorDataFdbk &rArr; EncoderPWMFdbk &rArr; UartSendData &rArr; HAL_UART_Transmit &rArr; UART_WaitOnFlagUntilTimeout
+<BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = UART_Receive_IT &rArr; HAL_UART_RxCpltCallback &rArr; USART2Interrupt &rArr; MotorDataFdbk &rArr; EncoderPWMFdbk &rArr; UartSendData &rArr; HAL_UART_Transmit &rArr; UART_WaitOnFlagUntilTimeout
 </UL>
 <BR>[Calls]<UL><LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_RxCpltCallback
 </UL>

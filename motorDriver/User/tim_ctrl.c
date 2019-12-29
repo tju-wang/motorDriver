@@ -42,6 +42,16 @@ Motor_t M1;
 unsigned long int IRQ_Counter = 0;
 extern float outAdcData[2];	//外部两路adc值
 extern float currAdcData[2];	//内部  电流adc值
+float tempVal[10] = {0};
+
+//debug相关变量  都初始化为float类型  数据由串口输出
+float debugData1[DEBUG_DATA_NUM] = {0};
+float debugData2[DEBUG_DATA_NUM] = {0};
+unsigned int debugNum = 0;
+unsigned char dataRecordFlag = 0;
+unsigned char debugPrintFlag = 0;
+
+
 //定时器中断控制函数
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)	
 {
@@ -61,7 +71,38 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	}
 }
 
+/**************************************debug数据记录****************************************/
+//可调参数  采样频率（时间）（最大深度提前设定）  采样数据类型：编码器 pwm 电机速度  加速度  采样开始时间可调
+unsigned char DebugFun(unsigned char debugflag)		//debugflag  调试的开关
+{
+	if(dataRecordFlag==1)	{	//记录数据
+		if(debugNum<DEBUG_DATA_NUM-1 && IRQ_Counter%DebugFreq==0)	{	//DebugFreq由flash参数指定
+			debugData1[debugNum] = M1.EnCounter;
+			debugData2[debugNum++] = M1.speed;			
+		}
+		else {
+			if(debugNum<DEBUG_DATA_NUM-1)	{
+				dataRecordFlag = 0;
+				debugPrintFlag = 1;	//输出数据
+			}
+		}
+	}
+	if(debugData1[DEBUG_DATA_NUM-2]!=0 || debugNum>=DEBUG_DATA_NUM-2)	{
+			dataRecordFlag = 0;
+			debugPrintFlag = 1;	//输出数据
+	}
+	//开启条件  暂定为延时条件 由flash参数指定
+	if(debugflag)	//定义计时部分  在时间到达后打开数据记录标志、清空需要检测到倒数第二位debugData1[]数组
+	{
+//		debugPrintFlag=0;
+	}
+	return HAL_OK;
+	
+}
 
+
+/**************************************电机状态检测****************************************/
+//检测电机状态  运动方向、速度、加速度方向、加速度检测
 unsigned char MotorState(Motor_t *pMotor)	//电机状态监测  改变runstate及speed值  计算加速度值
 {
 	long long int Sum1,Sum2;
@@ -72,17 +113,11 @@ unsigned char MotorState(Motor_t *pMotor)	//电机状态监测  改变runstate及speed值 
 	for(kk=0; kk<5; kk++)	{
 		Sum1 += pMotor->EnCoterArr[(parr-kk)%EncoderStoreNum];
 		Sum2 += pMotor->EnCoterArr[(parr+kk+1)%EncoderStoreNum];
-	}
-//	for(kk=0; kk<5; kk++)	{	//尝试优化速度求取部分  需要调整各环节力的补偿参数
-//		Sum1 += pState->EnCoterArr[(parr-kk)%EncoderStoreNum];
-//		Sum2 += pState->EnCoterArr[(parr-kk-5)%EncoderStoreNum];
-//	}
-//	Sum1 = pState->EnCoterArr[(parr)%EncoderStoreNum];
-//	Sum2 = pState->EnCoterArr[(parr-1)%EncoderStoreNum];
-	
+	}	
 	pMotor->speed = (float)((Sum1-Sum2)*2*1000*60/(REDUCTION*5*15.0f*4095));	//1ms 转过的counter数
 	if((pMotor->speed)<-StateRef)	{
 		pMotor->runstate = -1;
+		pMotor->speed = -pMotor->speed;	 //在计算完加速度后 再改变速度的符号
 	}
 	else if((pMotor->speed)>StateRef)	{
 		pMotor->runstate = 1;
@@ -90,26 +125,29 @@ unsigned char MotorState(Motor_t *pMotor)	//电机状态监测  改变runstate及speed值 
 	else	{
 		pMotor->runstate = 0;
 	}
-	pMotor->pSpArr +=1;
-	pMotor->pSpArr %=EncoderStoreNum;
-	pMotor->MoterSpeedArr[pMotor->pSpArr] = pMotor->speed;	//存储之前的速度数据
+	if(IRQ_Counter%ACCE_NUM==0)
+	{
+		pMotor->pSpArr +=1;
+		pMotor->pSpArr %=EncoderStoreNum;
+		pMotor->MoterSpeedArr[pMotor->pSpArr] = pMotor->speed;	//存储之前的速度数据
+		//计算加速度
+		parr = pMotor->pSpArr+EncoderStoreNum;	//在每一次编码器值更新的时候  pArr ++ 
+		speedSum1 = speedSum2 = 0;
+		for(kk=0; kk<5; kk++)	{
+			speedSum1 += pMotor->MoterSpeedArr[(parr-kk)%EncoderStoreNum];
+			speedSum2 += pMotor->MoterSpeedArr[(parr+kk+11)%EncoderStoreNum];
+		}
+		tempVal[0] = speedSum1 - speedSum2;
+		pMotor->accelration = (speedSum1 - speedSum2)*ACCEN_NUM/(5*15.0f);	//单位  rpm/s
+		if(pMotor->accelration<0)	{
+			pMotor->accelration = -pMotor->accelration;
+			pMotor->accDir = 0;
+		}
+		else {
+			pMotor->accDir = 1;
+		}
+	}
 	
-	if(pMotor->speed<0)	pMotor->speed = -pMotor->speed;	 //推拉  慢速 速度大约0x50->80  快速推拉 速度约0x210 -> 528
-	//计算加速度
-	parr = pMotor->pSpArr+EncoderStoreNum;	//在每一次编码器值更新的时候  pArr ++ 
-	speedSum1 = speedSum2 = 0;
-	for(kk=0; kk<5; kk++)	{
-		speedSum1 += pMotor->MoterSpeedArr[(parr-kk)%EncoderStoreNum];
-		speedSum2 += pMotor->MoterSpeedArr[(parr+kk+11)%EncoderStoreNum];
-	}
-	pMotor->accelration = (speedSum1 - speedSum2)*2000/(5*15.0f);	//单位  rpm/s
-	if(pMotor->accelration<0)	{
-		pMotor->accelration = -pMotor->accelration;
-		pMotor->accDir = -1;
-	}
-	else {
-		pMotor->accDir = 1;
-	}
 	return 1;
 	
 }
