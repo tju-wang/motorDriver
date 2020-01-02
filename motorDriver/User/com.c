@@ -1,12 +1,13 @@
 #include "com.h"
 
 extern DAC_HandleTypeDef hdac;
-
+extern Motor_t M1;
 //通讯硬件部分  数据收发
 static unsigned char Uart_counter = 0;  //计数
 static char UartStartFlag = 0;
 unsigned char UartRxData[9]; //缓存数据数组
 static unsigned int upwm;
+
 
 /****************串口数据收发******************/
 void USART2Interrupt(char UartRxBuf)		//参数  状态控制串口
@@ -33,11 +34,7 @@ void USART2Interrupt(char UartRxBuf)		//参数  状态控制串口
 					}
 				}break;
 				case CMD_DEBUG:	{
-	//				if(UartRxData[2]==0x11)	{
-	//					FlagDebug = 1;	}
-	//				else	{
-	//					FlagDebug = 0;
-	//				}
+					ChangeDebug(UartRxData[2],UartRxData[3]*100+UartRxData[4]);
 				}break;
 				case CMD_PWMSET:	{
 					upwm = UartRxData[2]*100+UartRxData[3];
@@ -54,6 +51,22 @@ void USART2Interrupt(char UartRxBuf)		//参数  状态控制串口
 						setZeroPWM();
 					}
 				}break;
+				case CMD_SPEEDSET:
+				{	//目标速度
+					M1.speedTar = UartRxData[2]*10+UartRxData[3]*0.1;
+					//正反转  PWM占空比   设置寄存器
+//					if(UartRxData[0]!=MOTORSTOP)
+//					{
+//						if(UartRxData[0]==CLOCKWISE)	//顺时针
+//							setPWMClockwise(upwm);
+//						else if(UartRxData[0]==ANTICLOCKWISE)	//逆时针
+//							setPWMAitClockwise(upwm);
+//					}
+//					else	//阻尼
+//					{
+//						setZeroPWM();
+//					}
+				}
 				case CMD_DACSET:
 				{
 					tempValue = UartRxData[2]*100+UartRxData[3];

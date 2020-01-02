@@ -14,5 +14,10 @@ char setPWMClockwise(unsigned int pwm);		//一路PWM   一路高电平
 char setFullPWM(void);
 char setZeroPWM(void);
 
+char CalcSpeedTar(float *speedTar,float speed);
+char CtrlMotor(unsigned char mode);
+char CalcSpeedPID(int *ctrl,float speedTar,float speedCur);
+char SetMotorPWM(char dir,int pwm,int lastPWM,int *last);
+
 
 #endif

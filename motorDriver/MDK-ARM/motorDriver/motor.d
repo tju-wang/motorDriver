@@ -1,6 +1,7 @@
 motordriver\motor.o: ..\User\motor.c
 motordriver\motor.o: ..\User\motor.h
 motordriver\motor.o: ..\User\include.h
+motordriver\motor.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 motordriver\motor.o: ../Inc/gpio.h
 motordriver\motor.o: ../Inc/main.h
 motordriver\motor.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h
@@ -46,3 +47,6 @@ motordriver\motor.o: ../Inc/usart.h
 motordriver\motor.o: ..\User\motor.h
 motordriver\motor.o: ..\User\stmflash.h
 motordriver\motor.o: ../Inc/adc.h
+motordriver\motor.o: ..\User\protocol.h
+motordriver\motor.o: ..\User\com.h
+motordriver\motor.o: ..\User\protocol.h

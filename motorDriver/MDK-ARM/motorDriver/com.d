@@ -1,6 +1,7 @@
 motordriver\com.o: ..\User\com.c
 motordriver\com.o: ..\User\com.h
 motordriver\com.o: ..\User\include.h
+motordriver\com.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 motordriver\com.o: ../Inc/gpio.h
 motordriver\com.o: ../Inc/main.h
 motordriver\com.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h

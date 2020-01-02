@@ -16,6 +16,10 @@ extern unsigned int FLASH_Init[FLASHSIZE];
 extern float outAdcData[2];	//外部两路adc值
 extern float currAdcData[2];	//内部  电流adc值
 
+extern unsigned char debugFLAG;
+extern debugStruct_t debugVar;
+//extern unsigned char debugPrintFlag;
+
 //解析电脑返回的力的数据
 //char AnalysisForce(unsigned char *data)
 //{
@@ -212,6 +216,35 @@ char DacAdcVlueFdbk(void)
 	return (UartSendData(UartFeedBackData,DataFdbkNum));		//发送数据
 }
 
+void ChangeDebug(unsigned char ch,unsigned int timeMicroSec)	//ch=1  打开调试   ch=0关闭调试 
+{
+	if(ch==1)
+	{
+		debugFLAG = 1;
+		debugVar.timeFlag = 0;
+		//解析延迟时间
+		if(timeMicroSec==0)
+			debugVar.timeDiff = timeMicroSec+1;	//不能 == 0
+		else
+			debugVar.timeDiff = timeMicroSec;
+	}
+	else if(ch==0)
+	{
+		debugFLAG = 0;
+		debugVar.timeDiff = 0;
+	}
+	else if(ch==2)	//查询数据状态  0x10 未准备好   0x11 准备好
+	{
+		UartFeedBackData[0] = 0x7B;
+		UartFeedBackData[1]	= CTL_DEBUGFDBK;
+		UartFeedBackData[2]	= (unsigned char)debugVar.debugPrintFlag; 
+		UartSendData(UartFeedBackData,DataFdbkNum);		//发送数据
+	}
+	else if(ch==3)
+	{
+		debugVar.debugPrintFlag = 2;	//开始输出
+	}
+}
 void FlashChange(unsigned int data,unsigned int num)
 {
 	unsigned char mm;

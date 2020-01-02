@@ -38,6 +38,7 @@ motordriver\can.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 motordriver\can.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 motordriver\can.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 motordriver\can.o: ../Inc/./../User/include.h
+motordriver\can.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 motordriver\can.o: ../Inc/gpio.h
 motordriver\can.o: ../Inc/main.h
 motordriver\can.o: ../Inc/tim.h
@@ -47,3 +48,6 @@ motordriver\can.o: ../Inc/usart.h
 motordriver\can.o: ../Inc/./../User/motor.h
 motordriver\can.o: ../Inc/./../User/stmflash.h
 motordriver\can.o: ../Inc/adc.h
+motordriver\can.o: ../Inc/./../User/protocol.h
+motordriver\can.o: ../Inc/./../User/com.h
+motordriver\can.o: ../Inc/./../User/protocol.h

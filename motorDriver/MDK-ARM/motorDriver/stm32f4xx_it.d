@@ -37,6 +37,7 @@ motordriver\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_ti
 motordriver\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 motordriver\stm32f4xx_it.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 motordriver\stm32f4xx_it.o: ../Inc/./../User/include.h
+motordriver\stm32f4xx_it.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 motordriver\stm32f4xx_it.o: ../Inc/gpio.h
 motordriver\stm32f4xx_it.o: ../Inc/main.h
 motordriver\stm32f4xx_it.o: ../Inc/tim.h
@@ -46,4 +47,7 @@ motordriver\stm32f4xx_it.o: ../Inc/usart.h
 motordriver\stm32f4xx_it.o: ../Inc/./../User/motor.h
 motordriver\stm32f4xx_it.o: ../Inc/./../User/stmflash.h
 motordriver\stm32f4xx_it.o: ../Inc/adc.h
+motordriver\stm32f4xx_it.o: ../Inc/./../User/protocol.h
+motordriver\stm32f4xx_it.o: ../Inc/./../User/com.h
+motordriver\stm32f4xx_it.o: ../Inc/./../User/protocol.h
 motordriver\stm32f4xx_it.o: ../Inc/stm32f4xx_it.h

@@ -11,7 +11,7 @@
 #define	ACCEN_NUM			(100)	//与加速度常数之  积  为 2000
 
 #define DEBUG_DATA_NUM		(2000)
-#define DebugFreq			(10)
+//#define DebugFreq			(10)
 
 
 typedef struct Motor{
@@ -28,11 +28,25 @@ typedef struct Motor{
 	float accelration;	//电机加速度
 	signed char accDir;		//加速与减速方向   -1  减速   1  加速
 	unsigned char motor_id;
-	
+	unsigned char motorMode;
+	float speedTar;
+	int CtrlPWM;
+	int CtrlLastPWM;
 }Motor_t;
+
+
+typedef struct debugStruct{
+	long int timeTar;
+	long int timeDiff;	//时间差
+	long int timeNow;	//当前时间  只执行一次  在收到开始debug时开始记录
+	unsigned char timeFlag;
+	unsigned char debugPrintFlag;
+	
+}debugStruct_t;
 
 unsigned char MotorState(Motor_t *pMotor);
 void EncoderUpdate(Motor_t *pEncoder, TIM_HandleTypeDef htim);	//编码器计数值更新  存入编码器数组当中
 unsigned char EncoderFlow(Motor_t* pEncoder, TIM_HandleTypeDef htim);
 unsigned char GetID(void);
+unsigned char DebugFun(unsigned char debugflag);
 #endif

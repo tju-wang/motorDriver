@@ -21,6 +21,8 @@ void FlashFDBK(char num);
 void FlashInit(void);
 void FlashChange(unsigned int data,unsigned int num);
 
+void ChangeDebug(unsigned char ch,unsigned int timeMicroSec);
+
 void DataCoverInt2Char(unsigned char *pNum1,unsigned char *pNum2,int pNum_Int);
 void DataLong2Char(unsigned char *pNum1,unsigned char *pNum2,unsigned char *pNum3,unsigned char *pNum4,long int Data);
 /*************协议相关宏****************/

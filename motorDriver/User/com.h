@@ -11,6 +11,7 @@
 #define 	CMD_EN 			0x10	//是否使能驱动芯片
 #define		CMD_PWMSET		0x20	//直接外部指定PWM
 #define		CMD_DACSET		0x21	//DAC决定流过驱动芯片的最大电流  过大  截断
+#define		CMD_SPEEDSET	0x22	//外部设置目标速度
 #define		CMD_FDBK		0x30
 //#define		CMD_PWMFDBK		0x31
 #define 	CMD_DEBUG		0x80
@@ -47,6 +48,7 @@
 #define 	CTL_EncoderFDBK		0x20
 #define		CMD_PWMFDBK			0x40	
 #define 	CTL_DAC_ADCFDBK		0x60
+#define		CTL_DEBUGFDBK		0x81
 
 #define 	CTL_SensorPWMFDBK	0x30	//返回传感器  PID运算后的电机数据
 #define		CTL_SensorDataFDBK	0x31	//返回传感器  原始数据

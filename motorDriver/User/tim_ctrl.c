@@ -47,9 +47,10 @@ float tempVal[10] = {0};
 //debug相关变量  都初始化为float类型  数据由串口输出
 float debugData1[DEBUG_DATA_NUM] = {0};
 float debugData2[DEBUG_DATA_NUM] = {0};
+unsigned char debugFLAG=0;
 unsigned int debugNum = 0;
 unsigned char dataRecordFlag = 0;
-unsigned char debugPrintFlag = 0;
+debugStruct_t debugVar;
 
 
 //定时器中断控制函数
@@ -58,16 +59,19 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	if(htim->Instance == htim3.Instance)	{
 		EncoderFlow(&M1,htim3);
 	}
-	if(htim->Instance == htim14.Instance)	//250us 中断
+	if(htim->Instance == htim14.Instance)	//0.5ms 中断
 	{
 		IRQ_Counter++;
-		if(IRQ_Counter>=0xFFFFFFFF)
+		if(IRQ_Counter>=0xFFFFFFFF)	//0.5ms中断  计时约596小时更新一次
 			IRQ_Counter = 0;
 		
 		EncoderUpdate(&M1,htim3);
 		GetOutAdc(outAdcData);
 		GetCurrAdc(currAdcData);
 		MotorState(&M1);
+		DebugFun(debugFLAG);
+		//HAL_GPIO_TogglePin(LED2_GPIO_Port,LED2_Pin);
+		CtrlMotor(M1.motorMode);	//控制模式
 	}
 }
 
@@ -76,25 +80,44 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 unsigned char DebugFun(unsigned char debugflag)		//debugflag  调试的开关
 {
 	if(dataRecordFlag==1)	{	//记录数据
-		if(debugNum<DEBUG_DATA_NUM-1 && IRQ_Counter%DebugFreq==0)	{	//DebugFreq由flash参数指定
+		if(debugNum<DEBUG_DATA_NUM-2 && IRQ_Counter%DebugFreq==0)	{	//DebugFreq由flash参数指定
 			debugData1[debugNum] = M1.EnCounter;
-			debugData2[debugNum++] = M1.speed;			
+			debugData2[debugNum] = M1.speed;	
+			debugNum++;			
 		}
 		else {
-			if(debugNum<DEBUG_DATA_NUM-1)	{
+			if(debugNum>=DEBUG_DATA_NUM-2)	{
 				dataRecordFlag = 0;
-				debugPrintFlag = 1;	//输出数据
+				debugVar.debugPrintFlag = 1;	//输出数据
+				debugFLAG = 0;		//关闭调试模式
+				debugNum = 0;
 			}
 		}
 	}
 	if(debugData1[DEBUG_DATA_NUM-2]!=0 || debugNum>=DEBUG_DATA_NUM-2)	{
 			dataRecordFlag = 0;
-			debugPrintFlag = 1;	//输出数据
+			debugVar.debugPrintFlag = 1;	//输出数据
+			debugFLAG = 0;		//关闭调试模式
+			debugNum = 0;
 	}
 	//开启条件  暂定为延时条件 由flash参数指定
 	if(debugflag)	//定义计时部分  在时间到达后打开数据记录标志、清空需要检测到倒数第二位debugData1[]数组
 	{
-//		debugPrintFlag=0;
+		if(debugVar.timeFlag == 0)	//关闭flag 记录当前时间
+		{
+			debugVar.timeNow = IRQ_Counter;
+			debugVar.timeFlag = 1;	//只有在打开debugflag时，才将 timeFlag 设置为1
+			if(debugVar.timeDiff!=0)
+			{
+				debugVar.timeTar = debugVar.timeNow + debugVar.timeDiff*2;	//转换为ms延时
+			}
+		}
+		
+		if(debugVar.timeTar==IRQ_Counter&&debugVar.timeFlag==1)	//到达等待时间 开始记录数据
+		{
+			dataRecordFlag = 1;
+//			debugVar.timeFlag = 0;
+		}
 	}
 	return HAL_OK;
 	
@@ -188,10 +211,10 @@ unsigned char GetID(void)
 	static int tt = 10000;
 	unsigned char id = 0;
 	unsigned char temp = 0;
-	tt = 1000;
-	while(tt)	{	//debug 时间约32ms  按键检测
-		tt--;
-	}
+//	tt = 1000;
+//	while(tt)	{	//debug 时间约32ms  按键检测
+//		tt--;
+//	}
 	temp = HAL_GPIO_ReadPin(ID1_GPIO_Port,ID1_Pin);
 	id += (temp<<0);
 	temp = HAL_GPIO_ReadPin(ID2_GPIO_Port,ID2_Pin);

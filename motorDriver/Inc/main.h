@@ -104,6 +104,7 @@ void ParaInit(void);
 void StartUp(void);
 
 void clearArr(unsigned char *arr,unsigned int len);
+void ClearFloatArr(float *data,unsigned int len);
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
