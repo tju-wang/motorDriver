@@ -57,10 +57,12 @@
 /* USER CODE BEGIN PTD */
 extern uint8_t RXBuffer[1];
 extern Motor_t M1;
+extern MotorCtrl_t M1Ctrl;
 extern float debugData1[DEBUG_DATA_NUM];
 extern float debugData2[DEBUG_DATA_NUM];
 extern debugStruct_t debugVar;
 extern unsigned char debugFLAG;
+
 
 unsigned int gErrorStatus;	//全局变量   用来显示错误提示
 uint32_t FLASH_Address = 0, PageError = 0;
@@ -73,11 +75,11 @@ unsigned int FLASH_Init[FLASHSIZE]={
 	00,	//机械结构版本	3
 	01,	//电路硬件版本	4
 	
-	10,	//Ctrl_P  		5		控制过程P参数
-	0,	//Ctrl_I		6
-	5,	//Ctrl_D 		7
+	1,	//Ctrl_P  		5		控制过程P参数
+	1,	//Ctrl_I		6
+	0,	//Ctrl_D 		7
 	10,	//DebugFreq		8		调试状态下的采样频率
-	100,//PWM_MAX		9		电机最大pwm
+	99,//PWM_MAX		9		电机最大pwm
 	0,	//PWM_MIN		10		最小pwm
 	0,	//				11								
 	0,	//				12
@@ -270,8 +272,8 @@ void StartUp(void)
 	M1.EnCounter = 0;
 	M1.EnOverflowNum = 0;
 	M1.motorMode = CTRL_MODE;
-	M1.CtrlLastPWM = 0;
-	M1.CtrlPWM = 0;
+	M1Ctrl.CtrlLastPWM = 0;
+	M1Ctrl.CtrlPWM = 0;
 	
 	//中断定时器
 	HAL_TIM_Base_Start_IT(&htim14);	//开启500us中断

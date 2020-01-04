@@ -71,7 +71,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		MotorState(&M1);
 		DebugFun(debugFLAG);
 		//HAL_GPIO_TogglePin(LED2_GPIO_Port,LED2_Pin);
-		CtrlMotor(M1.motorMode);	//控制模式
+		if(IRQ_Counter%2==0)
+			CtrlMotor(M1.motorMode);	//控制模式
 	}
 }
 

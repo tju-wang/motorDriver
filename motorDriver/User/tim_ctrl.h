@@ -29,9 +29,11 @@ typedef struct Motor{
 	signed char accDir;		//加速与减速方向   -1  减速   1  加速
 	unsigned char motor_id;
 	unsigned char motorMode;
-	float speedTar;
-	int CtrlPWM;
-	int CtrlLastPWM;
+	
+//	float speedTar;
+//	int CtrlPWM;
+//	int CtrlLastPWM;
+//	unsigned char ctrlDir;
 }Motor_t;
 
 

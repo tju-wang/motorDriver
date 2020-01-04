@@ -2,6 +2,7 @@
 
 extern DAC_HandleTypeDef hdac;
 extern Motor_t M1;
+extern MotorCtrl_t M1Ctrl;
 //通讯硬件部分  数据收发
 static unsigned char Uart_counter = 0;  //计数
 static char UartStartFlag = 0;
@@ -53,7 +54,7 @@ void USART2Interrupt(char UartRxBuf)		//参数  状态控制串口
 				}break;
 				case CMD_SPEEDSET:
 				{	//目标速度
-					M1.speedTar = UartRxData[2]*10+UartRxData[3]*0.1;
+					M1Ctrl.speedTar = UartRxData[2]*10+UartRxData[3]*0.1;
 					//正反转  PWM占空比   设置寄存器
 //					if(UartRxData[0]!=MOTORSTOP)
 //					{
@@ -66,7 +67,7 @@ void USART2Interrupt(char UartRxBuf)		//参数  状态控制串口
 //					{
 //						setZeroPWM();
 //					}
-				}
+				}break;
 				case CMD_DACSET:
 				{
 					tempValue = UartRxData[2]*100+UartRxData[3];
