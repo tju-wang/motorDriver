@@ -2,18 +2,18 @@
 #include "math.h"
 extern Motor_t M1;
 MotorCtrl_t M1Ctrl;
-
-
+enum Process M1Process;
 char CtrlMotor(unsigned char mode)
 {
 	static unsigned long int CtrlCounter = 0;
 	CtrlCounter++;
+	M1Ctrl.stepCounter--;
 	switch(mode)
 	{
 		case CTRL_MODE:
 		{
 			if(CtrlCounter%10==0)	{
-				CalcSpeedTar(&M1Ctrl.speedTar,M1.speed);
+				CalcSpeedTar(&M1Ctrl.speedTar,&M1Ctrl.ctrlDir);
 			}
 			CalcSpeedPID(&M1Ctrl.CtrlPWM,M1Ctrl.speedTar,M1.speed);
 			SetMotorPWM(CLOCKWISE,M1Ctrl.CtrlPWM,M1Ctrl.CtrlLastPWM,&(M1Ctrl.CtrlLastPWM));
@@ -35,14 +35,88 @@ char CtrlMotor(unsigned char mode)
 输入：目标位置  执行总时间  当前已经执行的时间  最大加、减速度  最大速度  当前速度
 得出：本次规划目标速度  转动方向  
 */
-char CalcSpeedTar(float *speedTar,float speed)
+char CalcSpeedTar(float *speedOut,unsigned char *dirOut)
 {
-//	*speedTar = 50.5;	//先给定值
-	static int sin_t = 0;
-	sin_t++;
-	*speedTar = 35*(sin(0.005*PI*sin_t)+1);
+	float speedTar;
+//	static int sin_t = 0;
+//	sin_t++;
+//	*speedTar = 35*(sin(0.008*PI*sin_t)+1);
+	//比较当前位置与目标位置大小  得出dir
+	if(M1Ctrl.PosTarget < M1.EnCounter)	{
+		*dirOut = CLOCKWISE;
+	}
+	else if(M1Ctrl.PosTarget > M1.EnCounter)	{
+		*dirOut = ANTICLOCKWISE;
+	}
+	else	{
+		*dirOut = MOTORSTOP;
+	}
+	//根据当前所处阶段（step判断）  求解当前目标速度  每一次都重新规划 reduceStep
+	//判断当前所处状态
+	if(M1Ctrl.stepCounter > M1Ctrl.acceStep)	{
+		M1Ctrl.ctrlProcess = ProAcce;
+	}
+	else if(M1Ctrl.stepCounter > M1Ctrl.reduceStep)	{
+		M1Ctrl.ctrlProcess = ProUniform;
+	}
+	else {	//减速阶段  负责减速停车与接近目标角度
+		M1Ctrl.ctrlProcess = ProReduce;
+	}
+	//根据状态  规划目标角度
+	switch(M1Ctrl.ctrlProcess)
+	{
+		case  ProStop:
+		{
+			speedTar = 0;
+		}break;
+		case ProAcce:
+		{
+			speedTar += M1Ctrl.speedAcce;
+			if(speedTar > M1Ctrl.speedMax)
+				speedTar = M1Ctrl.speedMax;
+		}break;
+		case ProUniform:	//匀速阶段  按理说要重新规划一次  实时改变最快速度和 reduceStep
+		{
+			speedTar = M1Ctrl.speedMax;		
+		}break;
+		case ProReduce:		//
+		{
+			speedTar = M1Ctrl.speedTar - M1Ctrl.speedReduce; 
+			if(speedTar<0)
+				speedTar = 0;
+		}break;
+		default:
+		{}break;
+			
+	}
+	
+	*speedOut = speedTar;
+	
 	return HAL_OK;
 }
+//规划函数  输入当前位置  目标位置  规划总时间  当前速度  已知加速度  减速度等  得出规划节点 speedMax等
+//ch 决定调用位置  ch = 1 接收到指令时规划  ch = 2 在过程中规划
+unsigned char PlanTraj(signed long int posTar,int stepAll,unsigned char ch)
+{
+	M1Ctrl.PosTarget = posTar;
+	long int posErr = M1Ctrl.PosTarget-M1.EnCounter;
+	if(posErr<0)	posErr = -posErr;
+	if(ch==1)	{	//接收到指令后规划  默认当前速度为0
+		//先判断是否是合理的规划  即是否可以匀速一段时间
+		if(stepAll > (posErr)/vMax)	//可以规划
+		{
+		}	
+		else {	//按照没有匀速阶段的方法来计算
+			
+		}
+	}
+	else if(ch==2)	//按照调用过程中来规划
+	{
+		
+	}
+	
+}
+
 
 //跟随期望速度  增量式PI控制器   返回的是pwm增量
 char CalcSpeedPID(int *ctrl,float speedTar,float speedCur)
