@@ -169,6 +169,10 @@ int main(void)
   /* USER CODE BEGIN 2 */
   StartUp();
   unsigned int numm,kk;
+  
+  
+  HAL_Delay(5000);
+  PlanTraj(M1.EnCounter+1392300,10000,1);
   /* USER CODE END 2 */
 
   /* Infinite loop */

@@ -22,8 +22,9 @@ char SetMotorPWM(char dir,int pwm,int lastPWM,int *last);
 
 char CalcSpeedTar(float *speedTar,unsigned char *dir);
 
+unsigned char PlanTraj(signed long int posTar,int stepAll,unsigned char ch);
 #define vMax  (70.0)
-#define	a1	(10.0)
+#define	a1	(1.2)
 #define	a2	(10.0)
 
 enum Process
@@ -38,6 +39,7 @@ typedef struct MotorCtrl{
 	
 	float speedTar;
 	float speedMax;
+	float acce;		//加速度  减速度
 	int CtrlPWM;
 	int CtrlLastPWM;
 	unsigned char ctrlDir;
@@ -49,6 +51,7 @@ typedef struct MotorCtrl{
 	int acceStep;		//加速完成step
 	int ctrlProcess;	//控制过程  0 停止  1加速  2匀速  3减速
 	float speedAcce;	//只在收到数据时计算一次
+	
 	float speedReduce;	//减速阶段的减速速度
 
 	//

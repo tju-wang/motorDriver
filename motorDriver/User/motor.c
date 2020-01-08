@@ -99,12 +99,49 @@ char CalcSpeedTar(float *speedOut,unsigned char *dirOut)
 unsigned char PlanTraj(signed long int posTar,int stepAll,unsigned char ch)
 {
 	M1Ctrl.PosTarget = posTar;
-	long int posErr = M1Ctrl.PosTarget-M1.EnCounter;
+	M1Ctrl.ctrlStep = stepAll;
+	M1Ctrl.stepCounter = M1Ctrl.ctrlStep;
+	
+	float posErr = (M1Ctrl.PosTarget-M1.EnCounter)/(4095.0f*REDUCTION);		//目标角度需要转过的圈数
+	long int s[3];	//分别是加速段  匀速段 减速段的位移
+	float vPlan,tAll,temp[2];
+	M1Ctrl.acce = a1;
 	if(posErr<0)	posErr = -posErr;
 	if(ch==1)	{	//接收到指令后规划  默认当前速度为0
 		//先判断是否是合理的规划  即是否可以匀速一段时间
-		if(stepAll > (posErr)/vMax)	//可以规划
+		if(stepAll > (2*posErr)/vMax)	//可以规划  存在匀速段
 		{
+			//解二次方程  vMax
+			tAll = stepAll/1000.0f;
+			temp[0] = (4*tAll*tAll-16*posErr/(M1Ctrl.acce)); 
+			if(temp[0]>0)
+			{
+				vPlan = 2*tAll - sqrt(temp[0]);
+				//vPlan = 2*tAll + sqrt(temp[0]);  二次方程的第二个解
+				if(vPlan<vMax)	//规定时间可以执行完
+				{
+					//计算梯形节点
+					M1Ctrl.acceStep = stepAll - (vPlan/(M1Ctrl.acce))*1000;
+					M1Ctrl.reduceStep = (vPlan/(M1Ctrl.acce))*1000;
+					M1Ctrl.speedMax = vPlan;
+					M1Ctrl.ctrlDir = CLOCKWISE;
+					
+				}
+				else	{	//此时不保证执行时间
+					vPlan = vMax;
+					//计算梯形节点
+					M1Ctrl.acceStep = stepAll - (vPlan/(M1Ctrl.acce))*1000;
+					M1Ctrl.reduceStep = (vPlan/(M1Ctrl.acce))*1000;
+					M1Ctrl.speedMax = vPlan;
+					M1Ctrl.ctrlDir = CLOCKWISE;
+				}
+				M1Ctrl.speedAcce = M1Ctrl.acce/(100*100);	//每10ms的加速值
+				M1Ctrl.speedReduce = M1Ctrl.acce/(100*100);
+			}
+			else	//没法规划  速度无解
+			{
+				
+			}
 		}	
 		else {	//按照没有匀速阶段的方法来计算
 			
