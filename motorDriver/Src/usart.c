@@ -24,7 +24,7 @@
 #include "./../User/com.h"	//包含上层文件  回调函数
 
 uint8_t RXBuffer[1];
-
+unsigned char gUsartFlag = 0;
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart2;
@@ -115,7 +115,7 @@ UNUSED(huart);
 
 HAL_UART_Receive_IT(huart, (uint8_t *)RXBuffer, 1); //再打开中断接收
 	if(huart==&huart2)	{
-		USART2Interrupt(RXBuffer[0]);
+		USART2Interrupt((char)RXBuffer[0]);
 		RXBuffer[0]=0xFF;
 	}
 }

@@ -62,7 +62,7 @@ extern float debugData1[DEBUG_DATA_NUM];
 extern float debugData2[DEBUG_DATA_NUM];
 extern debugStruct_t debugVar;
 extern unsigned char debugFLAG;
-
+extern unsigned char gUsartFlag;
 
 unsigned int gErrorStatus;	//全局变量   用来显示错误提示
 uint32_t FLASH_Address = 0, PageError = 0;
@@ -171,8 +171,8 @@ int main(void)
   unsigned int numm,kk;
   
   
-  HAL_Delay(5000);
-  PlanTraj(M1.EnCounter+1392300,10000,1);
+  HAL_Delay(1000);
+  PlanTraj(M1.EnCounter+59230,70,1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -182,10 +182,11 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	HAL_GPIO_TogglePin(LED1_GPIO_Port,LED1_Pin);
-	
-	HAL_Delay(50);
-	  
+	if(gUsartFlag==1)
+	{
+		gUsartFlag = 0;
+		ProtocAnalsis();
+	}
 	if(debugVar.debugPrintFlag!=0)
 	{
 		if(debugVar.debugPrintFlag==2)	//开始输出数据

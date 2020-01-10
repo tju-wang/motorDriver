@@ -59,6 +59,7 @@
 
 void USART2Interrupt(char UartRxBuf);
 char UartSendData(unsigned char *data,unsigned int len);
+char ProtocAnalsis(void);
 
 #endif
 

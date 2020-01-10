@@ -17,15 +17,20 @@ char setFullPWM(void);
 char setZeroPWM(void);
 
 char CtrlMotor(unsigned char mode);
-char CalcSpeedPID(int *ctrl,float speedTar,float speedCur);
-char SetMotorPWM(char dir,int pwm,int lastPWM,int *last);
+char SetMotorPWM(char dir,float pwm,float lastPWM,float *last);
 
+char CalcSpeedPID(float *ctrl,float speedTar,float speedCur);
 char CalcSpeedTar(float *speedTar,unsigned char *dir);
 
-unsigned char PlanTraj(signed long int posTar,int stepAll,unsigned char ch);
+//单位转换函数
+float RPreMin2CounterPerSec(float sp);
+float CounterPerSec2RPreMin(float sp);
+
+unsigned char PlanTraj(signed long long int posTar,float speedMax,unsigned char ch);
 #define vMax  (70.0)
-#define	a1	(1.2)
+#define	a1	(500)
 #define	a2	(10.0)
+#define PlanTime	(10)	//单位 ms  每次更新速度目标的时间
 
 enum Process
 {
@@ -40,19 +45,20 @@ typedef struct MotorCtrl{
 	float speedTar;
 	float speedMax;
 	float acce;		//加速度  减速度
-	int CtrlPWM;
-	int CtrlLastPWM;
+	float CtrlPWM;
+	float CtrlLastPWM;
 	unsigned char ctrlDir;
 	
-	signed long int PosTarget;	//编码器计数值
+	signed long long int PosTarget;	//编码器计数值
 	int ctrlStep;		//控制的总step
 	int stepCounter;	//在控制过程中剩余的step
 	int reduceStep;		//开始减速的step
 	int acceStep;		//加速完成step
 	int ctrlProcess;	//控制过程  0 停止  1加速  2匀速  3减速
 	float speedAcce;	//只在收到数据时计算一次
-	
 	float speedReduce;	//减速阶段的减速速度
+	int stepArr[3];		//三个阶段的时间
+	long long int distance[3];	//分别是加速段  匀速段 减速段的位移
 
 	//
 }MotorCtrl_t;

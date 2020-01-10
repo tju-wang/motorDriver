@@ -3,6 +3,12 @@ Motor driver for STM32F405RG
 
 ** will do
 @** done
+2020.1.010
+0.排除bug  Encounter 修改为 long long 类型 排除不定期的速度控制的抖动问题
+1.排除bug 在转动过程中读取电机状态  会影响底层控制的问题  --》将串口处理部分放到main函数中
+2.速度在很接近目标角度  但不超越  设置为0不停止  --》将速度环pi控制修改为pwm lastPWM 修改为float类型
+
+
 
 2020.1.08
 0.继续编写梯形规划部分  比较复杂

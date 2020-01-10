@@ -15,8 +15,8 @@
 
 
 typedef struct Motor{
-	signed char EnOverflowNum;	//编码器溢出的次数
-	signed long int EnCounter;	//编码器计数值
+	signed int EnOverflowNum;	//编码器溢出的次数
+	signed long long int EnCounter;	//编码器计数值
 	int tEnCounter;
 	
 	char pArr;	//当前新数据的存储位置

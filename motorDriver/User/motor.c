@@ -7,12 +7,13 @@ char CtrlMotor(unsigned char mode)
 {
 	static unsigned long int CtrlCounter = 0;
 	CtrlCounter++;
-	M1Ctrl.stepCounter--;
+	
 	switch(mode)
 	{
 		case CTRL_MODE:
 		{
-			if(CtrlCounter%10==0)	{
+			M1Ctrl.stepCounter--;
+			if(CtrlCounter%PlanTime==0)	{
 				CalcSpeedTar(&M1Ctrl.speedTar,&M1Ctrl.ctrlDir);
 			}
 			CalcSpeedPID(&M1Ctrl.CtrlPWM,M1Ctrl.speedTar,M1.speed);
@@ -40,7 +41,8 @@ char CalcSpeedTar(float *speedOut,unsigned char *dirOut)
 	float speedTar;
 //	static int sin_t = 0;
 //	sin_t++;
-//	*speedTar = 35*(sin(0.008*PI*sin_t)+1);
+//	*speedOut = 35*(sin(0.008*PI*sin_t)+1);
+//	*dirOut = CLOCKWISE;
 	//比较当前位置与目标位置大小  得出dir
 	if(M1Ctrl.PosTarget < M1.EnCounter)	{
 		*dirOut = CLOCKWISE;
@@ -71,7 +73,7 @@ char CalcSpeedTar(float *speedOut,unsigned char *dirOut)
 		}break;
 		case ProAcce:
 		{
-			speedTar += M1Ctrl.speedAcce;
+			speedTar = M1Ctrl.speedTar + M1Ctrl.speedAcce;
 			if(speedTar > M1Ctrl.speedMax)
 				speedTar = M1Ctrl.speedMax;
 		}break;
@@ -86,14 +88,65 @@ char CalcSpeedTar(float *speedOut,unsigned char *dirOut)
 				speedTar = 0;
 		}break;
 		default:
-		{}break;
-			
+		{}break;	
 	}
 	
 	*speedOut = speedTar;
-	
 	return HAL_OK;
 }
+
+//规划  设定目标位置、最大速度，加速度与减速度  只有在指令输入时做一次规划  在减速阶段重新规划  进入位置控制模式
+unsigned char PlanTraj(signed long long int posTar,float speedMax,unsigned char ch)
+{
+	M1Ctrl.PosTarget = posTar;
+	M1Ctrl.stepCounter = M1Ctrl.ctrlStep;
+	
+	M1Ctrl.speedMax = speedMax;
+	float spMax = RPreMin2CounterPerSec(speedMax);
+	long long int posErr =  (M1Ctrl.PosTarget-M1.EnCounter);	//本次规划的位置差
+	
+//	float posErr = (M1Ctrl.PosTarget-M1.EnCounter)/(4095.0f*REDUCTION);		//目标角度需要转过的圈数
+	
+	
+	float vPlan,tAll,temp[2];
+	M1Ctrl.acce = a1;
+	//求出减速时间  t = v/a
+	M1Ctrl.stepArr[2] = (spMax / M1Ctrl.acce) * 1000;	//减速时间  单位ms
+	M1Ctrl.stepArr[0] = (spMax / M1Ctrl.acce) * 1000;
+	
+	M1Ctrl.distance[2] = (M1Ctrl.stepArr[2]/1000.0f) * spMax * 0.5;	//减速三角形的面积
+	M1Ctrl.distance[0] = (M1Ctrl.stepArr[0]/1000.0f) * spMax * 0.5;	//加速三角形面积
+	M1Ctrl.distance[1] = posErr - (M1Ctrl.distance[0]+M1Ctrl.distance[2]);
+//	if(M1Ctrl.distance[1]<0)
+//		
+	//求出匀速阶段的运行时间
+	M1Ctrl.stepArr[1] = (M1Ctrl.distance[1] / spMax)*1000;		//匀速阶段  单位ms
+	
+	//规划切换时机
+	M1Ctrl.ctrlStep = M1Ctrl.stepArr[0] + M1Ctrl.stepArr[1] + M1Ctrl.stepArr[2];
+	
+	M1Ctrl.stepCounter = M1Ctrl.ctrlStep;
+	M1Ctrl.reduceStep = M1Ctrl.stepArr[2];
+	M1Ctrl.acceStep = M1Ctrl.ctrlStep - M1Ctrl.stepArr[0]; 
+	
+	M1Ctrl.speedAcce = (PlanTime/10)*0.01 *0.01 * M1Ctrl.acce;
+	M1Ctrl.speedReduce = (PlanTime/10)*0.01*0.01 * M1Ctrl.acce;
+	return HAL_OK;
+}
+
+// 速度单位  r/min -> counter/s
+float RPreMin2CounterPerSec(float sp)
+{
+	return (float)(sp*1024*4/60.0f);
+}
+float CounterPerSec2RPreMin(float sp)
+{
+	return (float)(sp*60/(4*1024.0f));
+}
+	
+
+/*
+设定时间，目标位置，加速度，减速度的控制模式，可以在时间输入合理时保证执行时间   但需要实时规划速度
 //规划函数  输入当前位置  目标位置  规划总时间  当前速度  已知加速度  减速度等  得出规划节点 speedMax等
 //ch 决定调用位置  ch = 1 接收到指令时规划  ch = 2 在过程中规划
 unsigned char PlanTraj(signed long int posTar,int stepAll,unsigned char ch)
@@ -154,9 +207,10 @@ unsigned char PlanTraj(signed long int posTar,int stepAll,unsigned char ch)
 	
 }
 
+*/
 
 //跟随期望速度  增量式PI控制器   返回的是pwm增量
-char CalcSpeedPID(int *ctrl,float speedTar,float speedCur)
+char CalcSpeedPID(float *ctrl,float speedTar,float speedCur)
 {
 	static unsigned char ii; 
 	static float Error[16];   //误差 期望位置-当前位置
@@ -166,17 +220,17 @@ char CalcSpeedPID(int *ctrl,float speedTar,float speedCur)
 																//两个unsigned做差 差为负数时会导致错误
 	VelocityError=Error[(ii&15)] - Error[(ii-1&15)];
 	
-	*ctrl=(int)(Ctrl_P*VelocityError + Ctrl_I*(Error[(ii&15)]));
+	*ctrl=(float)(Ctrl_P*VelocityError + Ctrl_I*(Error[(ii&15)]));
 	
 	//if(Error[(ii&15)]<=0.1&&Error[(ii&15)]>=-0.1) *ctrl = 0;  //电流ADC<+-10时 不给控制量  对应电流为+-0.03A
 	return HAL_OK;
 }	
 
 //对PID输出进行分析  调用电机基础控制函数   由期望转动方向（由位置差给出）  与  pid计算完之后的pwm   决定调用什么函数
-char SetMotorPWM(char dir,int pwm,int lastPWM,int *last)
+char SetMotorPWM(char dir,float pwm,float lastPWM,float *last)
 {
-	int Ctrl = 0;
-	Ctrl = lastPWM + pwm;
+	float Ctrl = 0;
+	Ctrl = (lastPWM + pwm);
 	if(Ctrl>1000)
 	{
 		Ctrl = 1000;
@@ -190,11 +244,11 @@ char SetMotorPWM(char dir,int pwm,int lastPWM,int *last)
 	{
 		case CLOCKWISE:
 		{
-			setPWMClockwise(Ctrl);
+			setPWMClockwise((int)Ctrl);
 		}break;
 		case ANTICLOCKWISE:
 		{
-			setPWMAitClockwise(Ctrl);
+			setPWMAitClockwise((int)Ctrl);
 		}break;
 		case MOTORSTOP:
 		{
