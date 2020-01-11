@@ -159,7 +159,7 @@
           <Type>0</Type>
           <LineNumber>175</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134237614</Address>
+          <Address>134237816</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -169,6 +169,22 @@
           <Filename>../Src/main.c</Filename>
           <ExecCommand></ExecCommand>
           <Expression>\\motorDriver\../Src/main.c\175</Expression>
+        </Bp>
+        <Bp>
+          <Number>1</Number>
+          <Type>0</Type>
+          <LineNumber>133</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134232444</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\User\motor.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\motorDriver\../User/motor.c\133</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>

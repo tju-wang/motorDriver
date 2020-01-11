@@ -70,9 +70,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		GetCurrAdc(currAdcData);
 		MotorState(&M1);
 		DebugFun(debugFLAG);
-		//HAL_GPIO_TogglePin(LED2_GPIO_Port,LED2_Pin);
 		if(IRQ_Counter%2==0)	//暂定1ms控制周期
 			CtrlMotor(M1.motorMode);	//控制模式
+		if(IRQ_Counter%1000==0)
+			HAL_GPIO_TogglePin(LED2_GPIO_Port,LED2_Pin);
 	}
 }
 
@@ -176,7 +177,6 @@ unsigned char MotorState(Motor_t *pMotor)	//电机状态监测  改变runstate及speed值 
 	
 }
 /**************************************编码器计数****************************************/
-
 void EncoderUpdate(Motor_t *pEncoder, TIM_HandleTypeDef htim)	//编码器计数值更新  存入编码器数组当中	
 {
 	pEncoder->EnCounter = (long int)((pEncoder->EnOverflowNum)*ENCODER_NUM+__HAL_TIM_GET_COUNTER(&htim));

@@ -28,7 +28,7 @@ float CounterPerSec2RPreMin(float sp);
 
 unsigned char PlanTraj(signed long long int posTar,float speedMax,unsigned char ch);
 #define vMax  (70.0)
-#define	a1	(500)
+#define	a1	(60000)
 #define	a2	(10.0)
 #define PlanTime	(10)	//单位 ms  每次更新速度目标的时间
 

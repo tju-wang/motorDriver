@@ -171,8 +171,8 @@ int main(void)
   unsigned int numm,kk;
   
   
-  HAL_Delay(1000);
-  PlanTraj(M1.EnCounter+59230,70,1);
+  HAL_Delay(200);
+  PlanTraj(M1.EnCounter+2092300,70,1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -276,7 +276,7 @@ void StartUp(void)
 
 	M1.EnCounter = 0;
 	M1.EnOverflowNum = 0;
-	M1.motorMode = CTRL_MODE;
+	M1.motorMode = 0;
 	M1Ctrl.CtrlLastPWM = 0;
 	M1Ctrl.CtrlPWM = 0;
 	

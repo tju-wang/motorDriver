@@ -12,7 +12,8 @@ char CtrlMotor(unsigned char mode)
 	{
 		case CTRL_MODE:
 		{
-			M1Ctrl.stepCounter--;
+			if(M1Ctrl.stepCounter>0)
+				M1Ctrl.stepCounter--;
 			if(CtrlCounter%PlanTime==0)	{
 				CalcSpeedTar(&M1Ctrl.speedTar,&M1Ctrl.ctrlDir);
 			}
@@ -44,10 +45,10 @@ char CalcSpeedTar(float *speedOut,unsigned char *dirOut)
 //	*speedOut = 35*(sin(0.008*PI*sin_t)+1);
 //	*dirOut = CLOCKWISE;
 	//比较当前位置与目标位置大小  得出dir
-	if(M1Ctrl.PosTarget < M1.EnCounter)	{
+	if(M1Ctrl.PosTarget > M1.EnCounter)	{
 		*dirOut = CLOCKWISE;
 	}
-	else if(M1Ctrl.PosTarget > M1.EnCounter)	{
+	else if(M1Ctrl.PosTarget < M1.EnCounter)	{
 		*dirOut = ANTICLOCKWISE;
 	}
 	else	{
@@ -58,7 +59,7 @@ char CalcSpeedTar(float *speedOut,unsigned char *dirOut)
 	if(M1Ctrl.stepCounter > M1Ctrl.acceStep)	{
 		M1Ctrl.ctrlProcess = ProAcce;
 	}
-	else if(M1Ctrl.stepCounter > M1Ctrl.reduceStep)	{
+	else if(M1Ctrl.stepCounter > M1Ctrl.reduceStep && ((*dirOut==CLOCKWISE && M1.EnCounter<=(M1Ctrl.PosTarget-M1Ctrl.distance[2])) || (*dirOut==ANTICLOCKWISE && M1.EnCounter>=(M1Ctrl.PosTarget+M1Ctrl.distance[2]))))	{
 		M1Ctrl.ctrlProcess = ProUniform;
 	}
 	else {	//减速阶段  负责减速停车与接近目标角度
@@ -99,16 +100,11 @@ char CalcSpeedTar(float *speedOut,unsigned char *dirOut)
 unsigned char PlanTraj(signed long long int posTar,float speedMax,unsigned char ch)
 {
 	M1Ctrl.PosTarget = posTar;
-	M1Ctrl.stepCounter = M1Ctrl.ctrlStep;
-	
 	M1Ctrl.speedMax = speedMax;
 	float spMax = RPreMin2CounterPerSec(speedMax);
-	long long int posErr =  (M1Ctrl.PosTarget-M1.EnCounter);	//本次规划的位置差
+	long long int posErr =  (M1Ctrl.PosTarget-M1.EnCounter);	//本次规划的位置差  有可能是负数
 	
-//	float posErr = (M1Ctrl.PosTarget-M1.EnCounter)/(4095.0f*REDUCTION);		//目标角度需要转过的圈数
-	
-	
-	float vPlan,tAll,temp[2];
+	float vPlan,tAll;
 	M1Ctrl.acce = a1;
 	//求出减速时间  t = v/a
 	M1Ctrl.stepArr[2] = (spMax / M1Ctrl.acce) * 1000;	//减速时间  单位ms
@@ -129,19 +125,22 @@ unsigned char PlanTraj(signed long long int posTar,float speedMax,unsigned char 
 	M1Ctrl.reduceStep = M1Ctrl.stepArr[2];
 	M1Ctrl.acceStep = M1Ctrl.ctrlStep - M1Ctrl.stepArr[0]; 
 	
-	M1Ctrl.speedAcce = (PlanTime/10)*0.01 *0.01 * M1Ctrl.acce;
-	M1Ctrl.speedReduce = (PlanTime/10)*0.01*0.01 * M1Ctrl.acce;
+	M1Ctrl.speedAcce = CounterPerSec2RPreMin((PlanTime)*0.001 * M1Ctrl.acce);
+	M1Ctrl.speedReduce = CounterPerSec2RPreMin((PlanTime)*0.001 * M1Ctrl.acce);
+	
+	M1.motorMode = CTRL_MODE;
+	
 	return HAL_OK;
 }
 
 // 速度单位  r/min -> counter/s
 float RPreMin2CounterPerSec(float sp)
 {
-	return (float)(sp*1024*4/60.0f);
+	return (float)(sp*1024*4*REDUCTION/60.0f);
 }
 float CounterPerSec2RPreMin(float sp)
 {
-	return (float)(sp*60/(4*1024.0f));
+	return (float)(sp*60/(4*REDUCTION*1024.0f));
 }
 	
 
