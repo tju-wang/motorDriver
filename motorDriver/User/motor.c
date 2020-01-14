@@ -3,6 +3,8 @@
 extern Motor_t M1;
 MotorCtrl_t M1Ctrl;
 enum Process M1Process;
+extern long long int gPosTar;
+
 char CtrlMotor(unsigned char mode)
 {
 	static unsigned long int CtrlCounter = 0;
@@ -15,10 +17,16 @@ char CtrlMotor(unsigned char mode)
 			if(M1Ctrl.stepCounter>0)
 				M1Ctrl.stepCounter--;
 			if(CtrlCounter%PlanTime==0)	{
+				PlanTraj(gPosTar,70,2);
 				CalcSpeedTar(&M1Ctrl.speedTar,&M1Ctrl.ctrlDir);
 			}
 			CalcSpeedPID(&M1Ctrl.CtrlPWM,M1Ctrl.speedTar,M1.speed);
 			SetMotorPWM(CLOCKWISE,M1Ctrl.CtrlPWM,M1Ctrl.CtrlLastPWM,&(M1Ctrl.CtrlLastPWM));
+		}break;
+		case POSCTRL_MODE:
+		{
+//			PosPID();
+			CalcSpeedTar(&M1Ctrl.speedTar,&M1Ctrl.ctrlDir);
 		}break;
 	}
 	
@@ -40,11 +48,23 @@ char CtrlMotor(unsigned char mode)
 char CalcSpeedTar(float *speedOut,unsigned char *dirOut)
 {
 	float speedTar;
+	long long int err = 0;
+	//先判断模式  依据当前位置与最后位置的位置差
+/*
+	err = M1Ctrl.PosTarget - M1.EnCounter;
+	if(err<0)	err = -err;
+	if(err<127000)	//改变模式
+	{
+		M1.motorMode = POSCTRL_MODE;
+	}
+*/
 //	static int sin_t = 0;
 //	sin_t++;
 //	*speedOut = 35*(sin(0.008*PI*sin_t)+1);
 //	*dirOut = CLOCKWISE;
 	//比较当前位置与目标位置大小  得出dir
+	
+
 	if(M1Ctrl.PosTarget > M1.EnCounter)	{
 		*dirOut = CLOCKWISE;
 	}
@@ -103,33 +123,121 @@ unsigned char PlanTraj(signed long long int posTar,float speedMax,unsigned char 
 	M1Ctrl.speedMax = speedMax;
 	float spMax = RPreMin2CounterPerSec(speedMax);
 	long long int posErr =  (M1Ctrl.PosTarget-M1.EnCounter);	//本次规划的位置差  有可能是负数
-	
-	float vPlan,tAll;
+	float vPlan,tAll;	
 	M1Ctrl.acce = a1;
-	//求出减速时间  t = v/a
-	M1Ctrl.stepArr[2] = (spMax / M1Ctrl.acce) * 1000;	//减速时间  单位ms
-	M1Ctrl.stepArr[0] = (spMax / M1Ctrl.acce) * 1000;
-	
-	M1Ctrl.distance[2] = (M1Ctrl.stepArr[2]/1000.0f) * spMax * 0.5;	//减速三角形的面积
-	M1Ctrl.distance[0] = (M1Ctrl.stepArr[0]/1000.0f) * spMax * 0.5;	//加速三角形面积
-	M1Ctrl.distance[1] = posErr - (M1Ctrl.distance[0]+M1Ctrl.distance[2]);
-//	if(M1Ctrl.distance[1]<0)
-//		
-	//求出匀速阶段的运行时间
-	M1Ctrl.stepArr[1] = (M1Ctrl.distance[1] / spMax)*1000;		//匀速阶段  单位ms
-	
-	//规划切换时机
-	M1Ctrl.ctrlStep = M1Ctrl.stepArr[0] + M1Ctrl.stepArr[1] + M1Ctrl.stepArr[2];
-	
-	M1Ctrl.stepCounter = M1Ctrl.ctrlStep;
-	M1Ctrl.reduceStep = M1Ctrl.stepArr[2];
-	M1Ctrl.acceStep = M1Ctrl.ctrlStep - M1Ctrl.stepArr[0]; 
-	
-	M1Ctrl.speedAcce = CounterPerSec2RPreMin((PlanTime)*0.001 * M1Ctrl.acce);
-	M1Ctrl.speedReduce = CounterPerSec2RPreMin((PlanTime)*0.001 * M1Ctrl.acce);
-	
-	M1.motorMode = CTRL_MODE;
-	
+	if(ch==1)
+	{
+		//求出减速时间  t = v/a
+		M1Ctrl.stepArr[2] = (spMax / M1Ctrl.acce) * 1000;	//减速时间  单位ms
+		M1Ctrl.stepArr[0] = (spMax / M1Ctrl.acce) * 1000;
+		
+		M1Ctrl.distance[2] = (M1Ctrl.stepArr[2]/1000.0f) * spMax * 0.5;	//减速三角形的面积
+		M1Ctrl.distance[0] = (M1Ctrl.stepArr[0]/1000.0f) * spMax * 0.5;	//加速三角形面积
+		M1Ctrl.distance[1] = posErr - (M1Ctrl.distance[0]+M1Ctrl.distance[2]);
+		if(M1Ctrl.distance[1]<0)	{	//此时  没有匀速段  只有加减速段
+			M1Ctrl.distance[1] = 0;
+			M1Ctrl.distance[2] = posErr/2.0f;
+			M1Ctrl.distance[0] = M1Ctrl.distance[2];
+			M1Ctrl.stepArr[2] = M1Ctrl.distance[2]/M1Ctrl.acce;
+			M1Ctrl.stepArr[0] = M1Ctrl.distance[0]/M1Ctrl.acce;
+			
+		}
+		
+		//求出匀速阶段的运行时间
+		M1Ctrl.stepArr[1] = (M1Ctrl.distance[1] / spMax)*1000;		//匀速阶段  单位ms
+		
+		//规划切换时机
+		M1Ctrl.ctrlStep = M1Ctrl.stepArr[0] + M1Ctrl.stepArr[1] + M1Ctrl.stepArr[2];
+		
+		M1Ctrl.stepCounter = M1Ctrl.ctrlStep;
+		M1Ctrl.reduceStep = M1Ctrl.stepArr[2];
+		M1Ctrl.acceStep = M1Ctrl.ctrlStep - M1Ctrl.stepArr[0]; 
+		
+		M1Ctrl.speedAcce = CounterPerSec2RPreMin((PlanTime)*0.001 * M1Ctrl.acce);
+		M1Ctrl.speedReduce = CounterPerSec2RPreMin((PlanTime)*0.001 * M1Ctrl.acce);
+		//规划结束  切换到控制模式
+		M1.motorMode = CTRL_MODE;	
+		
+	}
+	else if(ch==2)
+	{
+		switch(M1Ctrl.ctrlProcess)
+		{
+			case ProAcce:	//加速阶段
+			{
+				M1Ctrl.stepArr[2] = (spMax / M1Ctrl.acce) * 1000;	//减速时间  单位ms
+				M1Ctrl.stepArr[0] = ((spMax- RPreMin2CounterPerSec(M1.speed))/ M1Ctrl.acce) * 1000;
+				M1Ctrl.distance[2] = (M1Ctrl.stepArr[2]/1000.0f) * spMax * 0.5;	//减速三角形的面积
+				M1Ctrl.distance[0] = (M1Ctrl.stepArr[0]/1000.0f) * (spMax-RPreMin2CounterPerSec(M1.speed)) * 0.5;//加速三角形面积
+				M1Ctrl.distance[1] = posErr - (M1Ctrl.distance[0]+M1Ctrl.distance[2]);
+				
+				if(M1Ctrl.distance[1]<0)	{	//此时  没有匀速段  只有加减速段
+					M1Ctrl.distance[1] = 0;
+					M1Ctrl.distance[2] = posErr/2.0f;
+					M1Ctrl.distance[0] = M1Ctrl.distance[2];
+					M1Ctrl.stepArr[2] = M1Ctrl.distance[2]/M1Ctrl.acce;
+					M1Ctrl.stepArr[0] = M1Ctrl.distance[0]/M1Ctrl.acce;
+				}
+				//求出匀速阶段的运行时间
+				M1Ctrl.stepArr[1] = (M1Ctrl.distance[1] / spMax)*1000;		//匀速阶段  单位ms
+				//规划切换时机
+				M1Ctrl.ctrlStep = M1Ctrl.stepArr[0] + M1Ctrl.stepArr[1] + M1Ctrl.stepArr[2];	
+				M1Ctrl.stepCounter = M1Ctrl.ctrlStep;
+				M1Ctrl.acceStep = M1Ctrl.ctrlStep - M1Ctrl.stepArr[0]; 
+				M1Ctrl.reduceStep = M1Ctrl.stepArr[2];
+				M1Ctrl.speedAcce = CounterPerSec2RPreMin((PlanTime)*0.001 * M1Ctrl.acce);
+				M1Ctrl.speedReduce = CounterPerSec2RPreMin((PlanTime)*0.001 * M1Ctrl.acce);
+			}break;
+			case ProUniform:
+			{
+				M1Ctrl.stepArr[2] = (spMax / M1Ctrl.acce) * 1000;	//减速时间  单位ms
+				M1Ctrl.stepArr[0] = 0;
+				M1Ctrl.distance[2] = (M1Ctrl.stepArr[2]/1000.0f) * spMax * 0.5;	//减速三角形的面积
+				M1Ctrl.distance[0] = 0;//加速三角形面积
+				M1Ctrl.distance[1] = posErr - (M1Ctrl.distance[0]+M1Ctrl.distance[2]);
+				
+				if(M1Ctrl.distance[1]<0)	{	//此时  没有匀速段  只有加减速段
+					M1Ctrl.distance[1] = 0;
+					M1Ctrl.distance[2] = posErr;
+					M1Ctrl.stepArr[2] = M1Ctrl.distance[2]/M1Ctrl.acce;
+				}
+				//求出匀速阶段的运行时间
+				M1Ctrl.stepArr[1] = (M1Ctrl.distance[1] / spMax)*1000;		//匀速阶段  单位ms
+				//规划切换时机
+				M1Ctrl.ctrlStep = M1Ctrl.stepArr[1] + M1Ctrl.stepArr[2];
+				M1Ctrl.reduceStep = M1Ctrl.stepArr[2];
+				M1Ctrl.speedAcce = CounterPerSec2RPreMin((PlanTime)*0.001 * M1Ctrl.acce);
+				M1Ctrl.speedReduce = CounterPerSec2RPreMin((PlanTime)*0.001 * M1Ctrl.acce);
+				
+			}break;
+			case ProReduce:
+			{	
+				M1Ctrl.distance[2] = posErr;	//减速三角形的面积	
+				if(M1Ctrl.distance[2]>0)	{
+					M1Ctrl.stepArr[2] = (2*M1Ctrl.distance[2] / RPreMin2CounterPerSec(M1.speed))*1000;	//减速时间  单位ms
+					M1Ctrl.speedReduce = CounterPerSec2RPreMin((PlanTime)*0.001 * M1.speed/(M1Ctrl.stepArr[2]/1000.0f));
+				}
+				else	{ 
+					M1Ctrl.stepArr[2] = 1;	//不能为0
+					M1Ctrl.speedReduce = CounterPerSec2RPreMin(M1.speed/0.01);
+				}
+				M1Ctrl.stepArr[0] = 0;
+				M1Ctrl.distance[0] = 0;//加速三角形面积
+				M1Ctrl.distance[1] = 0;	//匀速阶段位移
+				
+				//求出匀速阶段的运行时间
+				M1Ctrl.stepArr[1] = 0;		//匀速阶段  单位ms
+				//规划切换时机				
+				
+			}break;
+			
+		}
+		M1Ctrl.stepCounter = M1Ctrl.ctrlStep;
+		//
+
+		M1.motorMode = CTRL_MODE;	
+	}
+
 	return HAL_OK;
 }
 
@@ -143,7 +251,10 @@ float CounterPerSec2RPreMin(float sp)
 	return (float)(sp*60/(4*REDUCTION*1024.0f));
 }
 	
-
+unsigned char PosPID(long long int Curpos,long long int PosTar)
+{
+	return HAL_OK;
+}
 /*
 设定时间，目标位置，加速度，减速度的控制模式，可以在时间输入合理时保证执行时间   但需要实时规划速度
 //规划函数  输入当前位置  目标位置  规划总时间  当前速度  已知加速度  减速度等  得出规划节点 speedMax等

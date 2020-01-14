@@ -27,6 +27,7 @@ float RPreMin2CounterPerSec(float sp);
 float CounterPerSec2RPreMin(float sp);
 
 unsigned char PlanTraj(signed long long int posTar,float speedMax,unsigned char ch);
+unsigned char PosPID(long long int Curpos,long long int PosTar);
 #define vMax  (70.0)
 #define	a1	(60000)
 #define	a2	(10.0)

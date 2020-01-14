@@ -14,6 +14,7 @@
 
 //ServoMode 舵机各个模式的定义
 #define         CTRL_MODE               (0X10)          //控制模式
+#define			POSCTRL_MODE			(0x16)			//位置控制模式
 #define         FLAT_MODE               (0x11)          //瘪模式，阻尼状态
 #define         INFLATE_MODE            (0x12)          //硬模式，可以用于控制角度等等
 #define         DIE_MODE                (0x13)          //死模式，空状态

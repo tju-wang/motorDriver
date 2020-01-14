@@ -63,6 +63,7 @@ extern float debugData2[DEBUG_DATA_NUM];
 extern debugStruct_t debugVar;
 extern unsigned char debugFLAG;
 extern unsigned char gUsartFlag;
+long long int gPosTar =0;
 
 unsigned int gErrorStatus;	//全局变量   用来显示错误提示
 uint32_t FLASH_Address = 0, PageError = 0;
@@ -172,7 +173,8 @@ int main(void)
   
   
   HAL_Delay(200);
-  PlanTraj(M1.EnCounter+2092300,70,1);
+  gPosTar = M1.EnCounter+2092300;
+  PlanTraj(gPosTar,70,1);
   /* USER CODE END 2 */
 
   /* Infinite loop */

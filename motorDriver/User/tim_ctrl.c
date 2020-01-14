@@ -51,7 +51,7 @@ unsigned char debugFLAG=0;
 unsigned int debugNum = 0;
 unsigned char dataRecordFlag = 0;
 debugStruct_t debugVar;
-
+extern long long int gPosTar;
 
 //定时器中断控制函数
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)	

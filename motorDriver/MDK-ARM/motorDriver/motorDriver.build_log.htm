@@ -28,21 +28,31 @@ Project File Date:  01/04/2020
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'motorDriver'
 compiling motor.c...
-..\User\motor.c(25): warning:  #940-D: missing return statement at end of non-void function "CtrlMotor" 
+..\User\motor.c(33): warning:  #940-D: missing return statement at end of non-void function "CtrlMotor" 
   }
-..\User\motor.c(113): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-  	M1Ctrl.distance[2] = (M1Ctrl.stepArr[2]/1000.0f) * spMax * 0.5;	//减速三角形的面积
-..\User\motor.c(114): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-  	M1Ctrl.distance[0] = (M1Ctrl.stepArr[0]/1000.0f) * spMax * 0.5;	//加速三角形面积
-..\User\motor.c(107): warning:  #177-D: variable "vPlan"  was declared but never referenced
-  	float vPlan,tAll;
-..\User\motor.c(107): warning:  #177-D: variable "tAll"  was declared but never referenced
-  	float vPlan,tAll;
-..\User\motor.c: 5 warnings, 0 errors
+..\User\motor.c(51): warning:  #177-D: variable "err"  was declared but never referenced
+  	long long int err = 0;
+..\User\motor.c(134): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  		M1Ctrl.distance[2] = (M1Ctrl.stepArr[2]/1000.0f) * spMax * 0.5;	//减速三角形的面积
+..\User\motor.c(135): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  		M1Ctrl.distance[0] = (M1Ctrl.stepArr[0]/1000.0f) * spMax * 0.5;	//加速三角形面积
+..\User\motor.c(170): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  				M1Ctrl.distance[2] = (M1Ctrl.stepArr[2]/1000.0f) * spMax * 0.5;	//减速三角形的面积
+..\User\motor.c(171): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  				M1Ctrl.distance[0] = (M1Ctrl.stepArr[0]/1000.0f) * (spMax-RPreMin2CounterPerSec(M1.speed)) * 0.5;//加速三角形面积
+..\User\motor.c(195): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  				M1Ctrl.distance[2] = (M1Ctrl.stepArr[2]/1000.0f) * spMax * 0.5;	//减速三角形的面积
+..\User\motor.c(222): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  					M1Ctrl.speedReduce = CounterPerSec2RPreMin(M1.speed/0.01);
+..\User\motor.c(126): warning:  #177-D: variable "vPlan"  was declared but never referenced
+  	float vPlan,tAll;	
+..\User\motor.c(126): warning:  #177-D: variable "tAll"  was declared but never referenced
+  	float vPlan,tAll;	
+..\User\motor.c: 10 warnings, 0 errors
 linking...
-Program Size: Code=20124 RO-data=448 RW-data=184 ZI-data=18136  
+Program Size: Code=21020 RO-data=448 RW-data=196 ZI-data=18132  
 FromELF: creating hex file...
-"motorDriver\motorDriver.axf" - 0 Error(s), 5 Warning(s).
+"motorDriver\motorDriver.axf" - 0 Error(s), 10 Warning(s).
 
 <h2>Software Packages used:</h2>
 
