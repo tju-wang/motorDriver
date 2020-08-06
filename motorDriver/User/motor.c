@@ -1,11 +1,12 @@
 #include "motor.h"
 #include "math.h"
+#include "stdlib.h"
 extern Motor_t M1;
 MotorCtrl_t M1Ctrl;
 enum Process M1Process;
 extern long long int gPosTar;
 
-char CtrlMotor(unsigned char mode)
+char CtrlMotor(unsigned char mode)	//1ms调用一次
 {
 	static unsigned long int CtrlCounter = 0;
 	CtrlCounter++;
@@ -21,7 +22,7 @@ char CtrlMotor(unsigned char mode)
 				CalcSpeedTar(&M1Ctrl.speedTar,&M1Ctrl.ctrlDir);
 			}
 			CalcSpeedPID(&M1Ctrl.CtrlPWM,M1Ctrl.speedTar,M1.speed);
-			SetMotorPWM(CLOCKWISE,M1Ctrl.CtrlPWM,M1Ctrl.CtrlLastPWM,&(M1Ctrl.CtrlLastPWM));
+			SetMotorPWM(M1Ctrl.ctrlDir,M1Ctrl.CtrlPWM,M1Ctrl.CtrlLastPWM,&(M1Ctrl.CtrlLastPWM));	//直接给定了方向  应该比较后选择
 		}break;
 		case POSCTRL_MODE:
 		{
@@ -122,7 +123,7 @@ unsigned char PlanTraj(signed long long int posTar,float speedMax,unsigned char 
 	M1Ctrl.PosTarget = posTar;
 	M1Ctrl.speedMax = speedMax;
 	float spMax = RPreMin2CounterPerSec(speedMax);
-	long long int posErr =  (M1Ctrl.PosTarget-M1.EnCounter);	//本次规划的位置差  有可能是负数
+	long long posErr =  llabs((M1Ctrl.PosTarget-M1.EnCounter));	//本次规划的位置差  有可能是负数
 	float vPlan,tAll;	
 	M1Ctrl.acce = a1;
 	if(ch==1)
@@ -138,9 +139,16 @@ unsigned char PlanTraj(signed long long int posTar,float speedMax,unsigned char 
 			M1Ctrl.distance[1] = 0;
 			M1Ctrl.distance[2] = posErr/2.0f;
 			M1Ctrl.distance[0] = M1Ctrl.distance[2];
-			M1Ctrl.stepArr[2] = M1Ctrl.distance[2]/M1Ctrl.acce;
-			M1Ctrl.stepArr[0] = M1Ctrl.distance[0]/M1Ctrl.acce;
-			
+			if(M1Ctrl.distance[2]>0)
+			{
+				M1Ctrl.stepArr[2] = sqrt(2*M1Ctrl.distance[2]/M1Ctrl.acce)*1000;	//s = 1/2 * a * t^2
+				M1Ctrl.stepArr[0] = sqrt(2*M1Ctrl.distance[0]/M1Ctrl.acce)*1000;
+			}
+			else
+			{
+				M1Ctrl.stepArr[2] = sqrt(-2*M1Ctrl.distance[2]/M1Ctrl.acce)*1000;
+				M1Ctrl.stepArr[0] = sqrt(-2*M1Ctrl.distance[0]/M1Ctrl.acce)*1000;
+			}			
 		}
 		
 		//求出匀速阶段的运行时间
@@ -155,6 +163,17 @@ unsigned char PlanTraj(signed long long int posTar,float speedMax,unsigned char 
 		
 		M1Ctrl.speedAcce = CounterPerSec2RPreMin((PlanTime)*0.001 * M1Ctrl.acce);
 		M1Ctrl.speedReduce = CounterPerSec2RPreMin((PlanTime)*0.001 * M1Ctrl.acce);
+		
+		//确定转动方向
+		if(M1Ctrl.PosTarget > M1.EnCounter)	{
+			M1Ctrl.ctrlDir = CLOCKWISE;
+		}
+		else if(M1Ctrl.PosTarget < M1.EnCounter)	{
+			M1Ctrl.ctrlDir = ANTICLOCKWISE;
+		}
+		else	{
+			M1Ctrl.ctrlDir = MOTORSTOP;
+		}
 		//规划结束  切换到控制模式
 		M1.motorMode = CTRL_MODE;	
 		
@@ -165,24 +184,22 @@ unsigned char PlanTraj(signed long long int posTar,float speedMax,unsigned char 
 		{
 			case ProAcce:	//加速阶段
 			{
-				M1Ctrl.stepArr[2] = (spMax / M1Ctrl.acce) * 1000;	//减速时间  单位ms
-				M1Ctrl.stepArr[0] = ((spMax- RPreMin2CounterPerSec(M1.speed))/ M1Ctrl.acce) * 1000;
-				M1Ctrl.distance[2] = (M1Ctrl.stepArr[2]/1000.0f) * spMax * 0.5;	//减速三角形的面积
-				M1Ctrl.distance[0] = (M1Ctrl.stepArr[0]/1000.0f) * (spMax-RPreMin2CounterPerSec(M1.speed)) * 0.5;//加速三角形面积
+				//M1Ctrl.stepArr[2] = (spMax / M1Ctrl.acce) * 1000;	//减速时间  单位ms
+				M1Ctrl.stepArr[0] = ((spMax- RPreMin2CounterPerSec(M1.speed))/ M1Ctrl.acce) * 1000;	//剩余加速所需的时间
+				//M1Ctrl.distance[2] = (M1Ctrl.stepArr[2]/1000.0f) * spMax * 0.5;	//减速三角形的面积
+				M1Ctrl.distance[0] = (M1Ctrl.stepArr[0]/1000.0f) * (spMax+RPreMin2CounterPerSec(M1.speed)) * 0.5;//剩余的加速梯形面积
 				M1Ctrl.distance[1] = posErr - (M1Ctrl.distance[0]+M1Ctrl.distance[2]);
 				
 				if(M1Ctrl.distance[1]<0)	{	//此时  没有匀速段  只有加减速段
 					M1Ctrl.distance[1] = 0;
-					M1Ctrl.distance[2] = posErr/2.0f;
-					M1Ctrl.distance[0] = M1Ctrl.distance[2];
-					M1Ctrl.stepArr[2] = M1Ctrl.distance[2]/M1Ctrl.acce;
-					M1Ctrl.stepArr[0] = M1Ctrl.distance[0]/M1Ctrl.acce;
+					M1Ctrl.distance[0] = (posErr-M1Ctrl.distance[2]);
+					M1Ctrl.stepArr[0] = (M1Ctrl.distance[0] * 2 / ((spMax+RPreMin2CounterPerSec(M1.speed))))*1000;
 				}
 				//求出匀速阶段的运行时间
 				M1Ctrl.stepArr[1] = (M1Ctrl.distance[1] / spMax)*1000;		//匀速阶段  单位ms
 				//规划切换时机
 				M1Ctrl.ctrlStep = M1Ctrl.stepArr[0] + M1Ctrl.stepArr[1] + M1Ctrl.stepArr[2];	
-				M1Ctrl.stepCounter = M1Ctrl.ctrlStep;
+				//M1Ctrl.stepCounter = M1Ctrl.ctrlStep;
 				M1Ctrl.acceStep = M1Ctrl.ctrlStep - M1Ctrl.stepArr[0]; 
 				M1Ctrl.reduceStep = M1Ctrl.stepArr[2];
 				M1Ctrl.speedAcce = CounterPerSec2RPreMin((PlanTime)*0.001 * M1Ctrl.acce);
@@ -190,23 +207,25 @@ unsigned char PlanTraj(signed long long int posTar,float speedMax,unsigned char 
 			}break;
 			case ProUniform:
 			{
-				M1Ctrl.stepArr[2] = (spMax / M1Ctrl.acce) * 1000;	//减速时间  单位ms
+				//M1Ctrl.stepArr[2] = (spMax / M1Ctrl.acce) * 1000;	//减速时间  单位ms
 				M1Ctrl.stepArr[0] = 0;
-				M1Ctrl.distance[2] = (M1Ctrl.stepArr[2]/1000.0f) * spMax * 0.5;	//减速三角形的面积
+				//M1Ctrl.distance[2] = (M1Ctrl.stepArr[2]/1000.0f) * spMax * 0.5;	//减速三角形的面积
 				M1Ctrl.distance[0] = 0;//加速三角形面积
 				M1Ctrl.distance[1] = posErr - (M1Ctrl.distance[0]+M1Ctrl.distance[2]);
 				
-				if(M1Ctrl.distance[1]<0)	{	//此时  没有匀速段  只有加减速段
+				if(M1Ctrl.distance[1]<0)	{	//此时  应该进入减速阶段
 					M1Ctrl.distance[1] = 0;
 					M1Ctrl.distance[2] = posErr;
-					M1Ctrl.stepArr[2] = M1Ctrl.distance[2]/M1Ctrl.acce;
+					if(M1Ctrl.distance[2]>0)
+						M1Ctrl.stepArr[2] = sqrt(2*M1Ctrl.distance[2]/M1Ctrl.acce)*1000;
+					//M1Ctrl.ctrlProcess = ProReduce;	//直接切到减速阶段
 				}
 				//求出匀速阶段的运行时间
 				M1Ctrl.stepArr[1] = (M1Ctrl.distance[1] / spMax)*1000;		//匀速阶段  单位ms
 				//规划切换时机
 				M1Ctrl.ctrlStep = M1Ctrl.stepArr[1] + M1Ctrl.stepArr[2];
 				M1Ctrl.reduceStep = M1Ctrl.stepArr[2];
-				M1Ctrl.speedAcce = CounterPerSec2RPreMin((PlanTime)*0.001 * M1Ctrl.acce);
+				//M1Ctrl.speedAcce = CounterPerSec2RPreMin((PlanTime)*0.001 * M1Ctrl.acce);
 				M1Ctrl.speedReduce = CounterPerSec2RPreMin((PlanTime)*0.001 * M1Ctrl.acce);
 				
 			}break;
@@ -215,7 +234,7 @@ unsigned char PlanTraj(signed long long int posTar,float speedMax,unsigned char 
 				M1Ctrl.distance[2] = posErr;	//减速三角形的面积	
 				if(M1Ctrl.distance[2]>0)	{
 					M1Ctrl.stepArr[2] = (2*M1Ctrl.distance[2] / RPreMin2CounterPerSec(M1.speed))*1000;	//减速时间  单位ms
-					M1Ctrl.speedReduce = CounterPerSec2RPreMin((PlanTime)*0.001 * M1.speed/(M1Ctrl.stepArr[2]/1000.0f));
+					M1Ctrl.speedReduce = ((PlanTime)*0.001 *(M1.speed)/(M1Ctrl.stepArr[2]/1000.0f));	//？
 				}
 				else	{ 
 					M1Ctrl.stepArr[2] = 1;	//不能为0

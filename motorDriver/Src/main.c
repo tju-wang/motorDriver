@@ -173,7 +173,7 @@ int main(void)
   
   
   HAL_Delay(200);
-  gPosTar = M1.EnCounter+2092300;
+  gPosTar = M1.EnCounter-5092300;
   PlanTraj(gPosTar,70,1);
   /* USER CODE END 2 */
 
