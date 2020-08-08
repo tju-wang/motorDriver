@@ -82,7 +82,7 @@ unsigned int FLASH_Init[FLASHSIZE]={
 	10,	//DebugFreq		8		调试状态下的采样频率
 	99,//PWM_MAX		9		电机最大pwm
 	0,	//PWM_MIN		10		最小pwm
-	0,	//				11								
+	10,	//PosErr		11								
 	0,	//				12
 	0,	//				13
 	
@@ -173,8 +173,8 @@ int main(void)
   
   
   HAL_Delay(200);
-  gPosTar = M1.EnCounter-5092300;
-  PlanTraj(gPosTar,70,1);
+  gPosTar = M1.EnCounter-592300;
+  PlanTraj(gPosTar,40,1);
   /* USER CODE END 2 */
 
   /* Infinite loop */

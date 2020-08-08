@@ -103,11 +103,11 @@ char CalcSpeedTar(float *speedOut,unsigned char *dirOut)
 		{
 			speedTar = M1Ctrl.speedMax;		
 		}break;
-		case ProReduce:		//
+		case ProReduce:		//减速到速度为0
 		{
 			speedTar = M1Ctrl.speedTar - M1Ctrl.speedReduce; 
 			if(speedTar<0)
-				speedTar = 0;
+				speedTar = fabs(speedTar);
 		}break;
 		default:
 		{}break;	
@@ -344,14 +344,22 @@ char CalcSpeedPID(float *ctrl,float speedTar,float speedCur)
 	static unsigned char ii; 
 	static float Error[16];   //误差 期望位置-当前位置
 	static float VelocityError;
+	static float Error_I = 0;
+	static float max_I = 50;
 	ii++;
 	Error[(ii&15)]=(speedTar - speedCur);  //必须有数据类型转换！  unsigned 转换为 signed  最高位直接被当做符号位  signed 转换为unsigned 最高位直接被当做数据位
 																//两个unsigned做差 差为负数时会导致错误
 	VelocityError=Error[(ii&15)] - Error[(ii-1&15)];
-	
-	*ctrl=(float)(Ctrl_P*VelocityError + Ctrl_I*(Error[(ii&15)]));
-	
+	Error_I += Error[(ii&15)];
+	if(Error_I > max_I)
+		Error_I = max_I;
+	else if(Error_I < -max_I)
+		Error_I = -max_I;
+		
+//	*ctrl=(float)(Ctrl_P*VelocityError + Ctrl_I*(Error[(ii&15)]));
+	*ctrl=(float)(Ctrl_P*0.01*(Error[(ii&15)]) + Ctrl_D*0.01*VelocityError + Ctrl_I*0.01*Error_I);
 	//if(Error[(ii&15)]<=0.1&&Error[(ii&15)]>=-0.1) *ctrl = 0;  //电流ADC<+-10时 不给控制量  对应电流为+-0.03A
+
 	return HAL_OK;
 }	
 
@@ -368,6 +376,11 @@ char SetMotorPWM(char dir,float pwm,float lastPWM,float *last)
 	{
 		Ctrl = 0;
 	}
+	//加posErr
+	if(llabs((M1Ctrl.PosTarget-M1.EnCounter)) < POSERR)	//防抖
+	{
+		Ctrl = 0;
+	}		
 	*last = Ctrl;
 	switch(dir)
 	{

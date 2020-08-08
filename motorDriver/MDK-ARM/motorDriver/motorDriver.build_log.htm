@@ -27,14 +27,28 @@ Project File Date:  01/04/2020
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'motorDriver'
-compiling main.c...
-../Src/main.c(172): warning:  #177-D: variable "kk"  was declared but never referenced
-    unsigned int numm,kk;
-../Src/main.c: 1 warning, 0 errors
+compiling motor.c...
+..\User\motor.c(34): warning:  #940-D: missing return statement at end of non-void function "CtrlMotor" 
+  }
+..\User\motor.c(52): warning:  #177-D: variable "err"  was declared but never referenced
+  	long long int err = 0;
+..\User\motor.c(135): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  		M1Ctrl.distance[2] = (M1Ctrl.stepArr[2]/1000.0f) * spMax * 0.5;	//减速三角形的面积
+..\User\motor.c(136): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  		M1Ctrl.distance[0] = (M1Ctrl.stepArr[0]/1000.0f) * spMax * 0.5;	//加速三角形面积
+..\User\motor.c(190): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  				M1Ctrl.distance[0] = (M1Ctrl.stepArr[0]/1000.0f) * (spMax+RPreMin2CounterPerSec(M1.speed)) * 0.5;//剩余的加速梯形面积
+..\User\motor.c(241): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  					M1Ctrl.speedReduce = CounterPerSec2RPreMin(M1.speed/0.01);
+..\User\motor.c(127): warning:  #177-D: variable "vPlan"  was declared but never referenced
+  	float vPlan,tAll;	
+..\User\motor.c(127): warning:  #177-D: variable "tAll"  was declared but never referenced
+  	float vPlan,tAll;	
+..\User\motor.c: 8 warnings, 0 errors
 linking...
-Program Size: Code=21556 RO-data=448 RW-data=200 ZI-data=18136  
+Program Size: Code=21824 RO-data=448 RW-data=208 ZI-data=18136  
 FromELF: creating hex file...
-"motorDriver\motorDriver.axf" - 0 Error(s), 1 Warning(s).
+"motorDriver\motorDriver.axf" - 0 Error(s), 8 Warning(s).
 
 <h2>Software Packages used:</h2>
 

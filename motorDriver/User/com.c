@@ -104,6 +104,11 @@ char ProtocAnalsis(void)
 //						setZeroPWM();
 //					}
 		}break;
+//		case CMD_PLANTRAJ:
+//		{
+//			
+//			PlanTraj(gPosTar,70,1);
+//		}break;
 		case CMD_DACSET:
 		{
 			tempValue = UartRxData_2[2]*100+UartRxData_2[3];

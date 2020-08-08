@@ -37,7 +37,7 @@
 #define			PWM_MAX						((*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*8))))	
 #define			PWM_MIN						((*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*9))))	//		10
 
-#define			StopPwm2					((float)(*(unsigned char*)(uint32_t)(ADDR_FLASH_SECTOR6+(4*10)))/1000)			
+#define			POSERR						((float)(*(unsigned char*)(uint32_t)(ADDR_FLASH_SECTOR6+(4*10)))/1000)			
 #define			InertiaPara					((float)(*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*11)))/1000)	
 
 //#define			Sensor_Para					(0.02)
