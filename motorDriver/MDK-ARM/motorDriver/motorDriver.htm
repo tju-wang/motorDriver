@@ -3,7 +3,7 @@
 <title>Static Call Graph - [motorDriver\motorDriver.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image motorDriver\motorDriver.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Fri Aug 07 20:29:38 2020
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Sat Aug 08 23:54:37 2020
 <BR><P>
 <H3>Maximum Stack Usage =        320 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -24,8 +24,8 @@ Function Pointers
  <LI><a href="#[1c]">ADC_IRQHandler</a> from startup_stm32f405xx.o(.text) referenced from startup_stm32f405xx.o(RESET)
  <LI><a href="#[4]">BusFault_Handler</a> from stm32f4xx_it.o(i.BusFault_Handler) referenced from startup_stm32f405xx.o(RESET)
  <LI><a href="#[1e]">CAN1_RX0_IRQHandler</a> from stm32f4xx_it.o(i.CAN1_RX0_IRQHandler) referenced from startup_stm32f405xx.o(RESET)
- <LI><a href="#[1f]">CAN1_RX1_IRQHandler</a> from stm32f4xx_it.o(i.CAN1_RX1_IRQHandler) referenced from startup_stm32f405xx.o(RESET)
- <LI><a href="#[20]">CAN1_SCE_IRQHandler</a> from stm32f4xx_it.o(i.CAN1_SCE_IRQHandler) referenced from startup_stm32f405xx.o(RESET)
+ <LI><a href="#[1f]">CAN1_RX1_IRQHandler</a> from startup_stm32f405xx.o(.text) referenced from startup_stm32f405xx.o(RESET)
+ <LI><a href="#[20]">CAN1_SCE_IRQHandler</a> from startup_stm32f405xx.o(.text) referenced from startup_stm32f405xx.o(RESET)
  <LI><a href="#[1d]">CAN1_TX_IRQHandler</a> from startup_stm32f405xx.o(.text) referenced from startup_stm32f405xx.o(RESET)
  <LI><a href="#[48]">CAN2_RX0_IRQHandler</a> from startup_stm32f405xx.o(.text) referenced from startup_stm32f405xx.o(RESET)
  <LI><a href="#[49]">CAN2_RX1_IRQHandler</a> from startup_stm32f405xx.o(.text) referenced from startup_stm32f405xx.o(RESET)
@@ -150,6 +150,12 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[1c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ADC_IRQHandler
 </UL>
+<BR>[Address Reference Count : 1]<UL><LI> startup_stm32f405xx.o(RESET)
+</UL>
+<P><STRONG><a name="[1f]"></a>CAN1_RX1_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, startup_stm32f405xx.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> startup_stm32f405xx.o(RESET)
+</UL>
+<P><STRONG><a name="[20]"></a>CAN1_SCE_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, startup_stm32f405xx.o(.text))
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f405xx.o(RESET)
 </UL>
 <P><STRONG><a name="[1d]"></a>CAN1_TX_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, startup_stm32f405xx.o(.text))
@@ -654,20 +660,6 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f405xx.o(RESET)
 </UL>
-<P><STRONG><a name="[1f]"></a>CAN1_RX1_IRQHandler</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, stm32f4xx_it.o(i.CAN1_RX1_IRQHandler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = CAN1_RX1_IRQHandler &rArr; HAL_CAN_IRQHandler
-</UL>
-<BR>[Calls]<UL><LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_CAN_IRQHandler
-</UL>
-<BR>[Address Reference Count : 1]<UL><LI> startup_stm32f405xx.o(RESET)
-</UL>
-<P><STRONG><a name="[20]"></a>CAN1_SCE_IRQHandler</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, stm32f4xx_it.o(i.CAN1_SCE_IRQHandler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = CAN1_SCE_IRQHandler &rArr; HAL_CAN_IRQHandler
-</UL>
-<BR>[Calls]<UL><LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_CAN_IRQHandler
-</UL>
-<BR>[Address Reference Count : 1]<UL><LI> startup_stm32f405xx.o(RESET)
-</UL>
 <P><STRONG><a name="[80]"></a>CalcSpeedPID</STRONG> (Thumb, 240 bytes, Stack size 48 bytes, motor.o(i.CalcSpeedPID))
 <BR><BR>[Stack]<UL><LI>Max Depth = 136<LI>Call Chain = CalcSpeedPID &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
@@ -961,9 +953,7 @@ Global Symbols
 <LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_CAN_RxFifo0FullCallback
 <LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_CAN_ErrorCallback
 </UL>
-<BR>[Called By]<UL><LI><a href="#[20]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN1_SCE_IRQHandler
-<LI><a href="#[1f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN1_RX1_IRQHandler
-<LI><a href="#[1e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN1_RX0_IRQHandler
+<BR>[Called By]<UL><LI><a href="#[1e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN1_RX0_IRQHandler
 </UL>
 
 <P><STRONG><a name="[b3]"></a>HAL_CAN_Init</STRONG> (Thumb, 282 bytes, Stack size 16 bytes, stm32f4xx_hal_can.o(i.HAL_CAN_Init))
@@ -975,7 +965,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[fa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_CAN1_Init
 </UL>
 
-<P><STRONG><a name="[b4]"></a>HAL_CAN_MspInit</STRONG> (Thumb, 142 bytes, Stack size 32 bytes, can.o(i.HAL_CAN_MspInit))
+<P><STRONG><a name="[b4]"></a>HAL_CAN_MspInit</STRONG> (Thumb, 110 bytes, Stack size 32 bytes, can.o(i.HAL_CAN_MspInit))
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = HAL_CAN_MspInit &rArr; HAL_GPIO_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_SetPriority
@@ -1523,7 +1513,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[58]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[fa]"></a>MX_CAN1_Init</STRONG> (Thumb, 52 bytes, Stack size 8 bytes, can.o(i.MX_CAN1_Init))
+<P><STRONG><a name="[fa]"></a>MX_CAN1_Init</STRONG> (Thumb, 60 bytes, Stack size 8 bytes, can.o(i.MX_CAN1_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = MX_CAN1_Init &rArr; HAL_CAN_Init &rArr; HAL_CAN_MspInit &rArr; HAL_GPIO_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_CAN_Init

@@ -50,7 +50,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "stm32f4xx_hal_def.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -101,6 +101,10 @@ unsigned int FLASH_Init[FLASHSIZE]={
 	0x00,	//HardWare Version	23
 	0x00	//SoftWare Version	24
 };
+
+
+
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -116,6 +120,10 @@ unsigned int FLASH_Init[FLASHSIZE]={
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+CAN_FilterTypeDef  sFilterConfig;
+static CAN_TxHeaderTypeDef        TxMessage;
+static CAN_RxHeaderTypeDef        RxMessage;
+
 
 /* USER CODE END PV */
 
@@ -170,6 +178,9 @@ int main(void)
   /* USER CODE BEGIN 2 */
   StartUp();
   unsigned int numm,kk;
+  
+  
+  
   
   
   HAL_Delay(200);

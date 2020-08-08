@@ -52,7 +52,7 @@ void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOC, EnMotor_Pin|LED1_Pin|LED2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(CAN_RS_GPIO_Port, CAN_RS_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(CAN_RS_GPIO_Port, CAN_RS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : PtPin */
   GPIO_InitStruct.Pin = FAU_Pin;
