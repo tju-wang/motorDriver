@@ -49,3 +49,4 @@ motordriver\com.o: ..\User\stmflash.h
 motordriver\com.o: ../Inc/adc.h
 motordriver\com.o: ..\User\protocol.h
 motordriver\com.o: ..\User\com.h
+motordriver\com.o: ../Inc/can.h

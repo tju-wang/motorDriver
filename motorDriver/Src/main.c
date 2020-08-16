@@ -76,15 +76,15 @@ unsigned int FLASH_Init[FLASHSIZE]={
 	00,	//机械结构版本	3
 	01,	//电路硬件版本	4
 	
-	1,	//Ctrl_P  		5		控制过程P参数
-	1,	//Ctrl_I		6
-	0,	//Ctrl_D 		7
+	120,	//Ctrl_P  		5		控制过程P参数
+	0,	//Ctrl_I		6
+	200,	//Ctrl_D 		7
 	10,	//DebugFreq		8		调试状态下的采样频率
 	99,//PWM_MAX		9		电机最大pwm
 	0,	//PWM_MIN		10		最小pwm
 	10,	//PosErr		11								
-	0,	//				12
-	0,	//				13
+	150,	//				12
+	3,	//				13
 	
 	0,	//				14
 	
@@ -120,9 +120,22 @@ unsigned int FLASH_Init[FLASHSIZE]={
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-CAN_FilterTypeDef  sFilterConfig;
-static CAN_TxHeaderTypeDef        TxMessage;
-static CAN_RxHeaderTypeDef        RxMessage;
+//CAN_FilterTypeDef  sFilterConfig;
+//static CAN_TxHeaderTypeDef        TxMessage;
+//static CAN_RxHeaderTypeDef        RxMessage;
+
+#define F407VET6_BOARD_CAN_ID    	  0x001		//CAN通讯的ID
+#define SENSOR_BOARD_CAN_ID  	  	  0x79
+#define ANOTHER_SENSOR_BOARD_CAN_ID   0x003
+#define THIRD_SENSOR_BOARD_CAN_ID  	  0x004
+
+//2个3级深度的FIFO  
+#define   CAN1FIFO   CAN_RX_FIFO0                
+#define   CAN2FIFO   CAN_RX_FIFO1  //   
+CAN_TxHeaderTypeDef     TxMeg;  
+CAN_RxHeaderTypeDef     RxMeg;  
+char recvData[20] = {'0'};
+extern CAN_HandleTypeDef hcan1;
 
 
 /* USER CODE END PV */
@@ -178,14 +191,13 @@ int main(void)
   /* USER CODE BEGIN 2 */
   StartUp();
   unsigned int numm,kk;
-  
-  
-  
+  char canData[100] = "hello can test success!\n";
+  CAN_User_Init(&hcan1);
   
   
   HAL_Delay(200);
-  gPosTar = M1.EnCounter-592300;
-  PlanTraj(gPosTar,40,1);
+//  gPosTar = M1.EnCounter-5092300;
+//  PlanTraj(gPosTar,70,1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -219,7 +231,9 @@ int main(void)
 			__enable_irq(); // on INT 
 		}
 	}
-		
+	/*can发送测试*/
+//	CANx_SendNormalData(&hcan1,SENSOR_BOARD_CAN_ID,(uint8_t *)canData,sizeof(canData)/sizeof(char));
+//	HAL_Delay(500);
   }
   /* USER CODE END 3 */
 }
@@ -280,7 +294,7 @@ void StartUp(void)
 	HAL_TIM_Base_Start_IT(&htim3);
 
 	HAL_GPIO_WritePin(EnMotor_GPIO_Port,EnMotor_Pin,GPIO_PIN_SET);
-	M1.motor_id = GetID();
+	M1.motor_id = GetID();	//获取当前驱动版ID
 	
 	TIM1->CCR1 = 0;
 	TIM1->CCR2 = 0;
@@ -337,6 +351,112 @@ void ClearFloatArr(float *data,unsigned int len)
 		(*data++) = 0;
 	}
 }
+
+
+void CAN_User_Init(CAN_HandleTypeDef* hcan)   //用户初始化函数
+{
+   CAN_FilterTypeDef  sFilterConfig;
+   HAL_StatusTypeDef  HAL_Status;
+	
+  TxMeg.IDE=CAN_ID_STD;//CAN_ID_EXT;
+  TxMeg.RTR=CAN_RTR_DATA;
+
+  sFilterConfig.FilterBank = 0;                       //过滤器0
+  sFilterConfig.FilterMode =  CAN_FILTERMODE_IDLIST;  //设为列表模式    
+  sFilterConfig.FilterScale = CAN_FILTERSCALE_16BIT;    
+  sFilterConfig.FilterIdHigh = (M1.motor_id)<<5;   //基本ID放入到STID中  
+  sFilterConfig.FilterIdLow  = SENSOR_BOARD_CAN_ID <<5;    
+
+  sFilterConfig.FilterMaskIdHigh =ANOTHER_SENSOR_BOARD_CAN_ID<<5;
+  sFilterConfig.FilterMaskIdLow  =THIRD_SENSOR_BOARD_CAN_ID <<5; 
+  sFilterConfig.FilterFIFOAssignment = CAN1FIFO;    //接收到的报文放入到FIFO0中 
+  sFilterConfig.FilterActivation = ENABLE;  	//激活过滤器
+
+  sFilterConfig.SlaveStartFilterBank  = 0; 
+
+  HAL_Status=HAL_CAN_ConfigFilter(hcan, &sFilterConfig);
+
+  HAL_Status=HAL_CAN_Start(hcan);  //开启CAN
+
+  if(HAL_Status!=HAL_OK){
+
+	printf("开启CAN失败\r\n");	
+
+ }	
+
+ HAL_Status=HAL_CAN_ActivateNotification(hcan,   CAN_IT_RX_FIFO0_MSG_PENDING);
+
+ if(HAL_Status!=HAL_OK){
+
+	printf("开启挂起中段允许失败\r\n");	
+
+  }
+}
+
+
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)  //接收回调函数
+{
+  uint8_t  Data[8];
+  HAL_StatusTypeDef	HAL_RetVal;
+  if(hcan ==&hcan1){	
+    HAL_RetVal=HAL_CAN_GetRxMessage(hcan,  CAN1FIFO, &RxMeg,  Data);
+
+    if ( HAL_OK==HAL_RetVal){  
+		
+		for(int i=0;i<8;++i)
+		{
+			recvData[i] = Data[i];
+			USART2Interrupt(Data[i]);
+		}
+      //在这里接收数据
+    }
+
+  }
+
+}
+
+ 
+
+//发送数据函数
+
+uint8_t CANx_SendNormalData(CAN_HandleTypeDef* hcan,uint16_t ID,uint8_t *pData,uint16_t Len)
+{
+
+	HAL_StatusTypeDef	HAL_RetVal;
+    uint16_t SendTimes,SendCNT=0;
+	uint8_t  FreeTxNum=0;
+
+	TxMeg.StdId=ID;
+	if(!hcan || ! pData ||!Len)  return 1;
+	SendTimes=Len/8+(Len%8?1:0);
+	FreeTxNum=HAL_CAN_GetTxMailboxesFreeLevel(hcan);
+	TxMeg.DLC=8;
+	while(SendTimes--){
+
+		if(0==SendTimes){
+
+			if(Len%8)
+
+				TxMeg.DLC=Len%8;
+		}
+
+		while(0==FreeTxNum){
+			FreeTxNum=HAL_CAN_GetTxMailboxesFreeLevel(hcan);
+		}
+		HAL_Delay(1);   //没有延时很有可能会发送失败
+
+		HAL_RetVal=HAL_CAN_AddTxMessage(hcan,&TxMeg,pData+SendCNT,(uint32_t*)CAN_TX_MAILBOX0); 
+		if(HAL_RetVal!=HAL_OK)
+		{
+			return 2;
+		}
+		SendCNT+=8;
+	}
+	
+  return 0;
+}
+
+
 /* USER CODE END 4 */
 
 /**

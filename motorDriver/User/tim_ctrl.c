@@ -62,14 +62,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	if(htim->Instance == htim14.Instance)	//0.5ms 中断
 	{
 		IRQ_Counter++;
-		if(IRQ_Counter>=0xFFFFFFFF)	//0.5ms中断  计时约596小时更新一次
+		if(IRQ_Counter>=0xFFFFFFF0)	//0.5ms中断  计时约596小时更新一次
 			IRQ_Counter = 0;
 		
 		EncoderUpdate(&M1,htim3);
 		GetOutAdc(outAdcData);
 		GetCurrAdc(currAdcData);
 		MotorState(&M1);
-		DebugFun(debugFLAG);
+		//DebugFun(debugFLAG);
 		if(IRQ_Counter%2==0)	//暂定1ms控制周期
 			CtrlMotor(M1.motorMode);	//控制模式
 		if(IRQ_Counter%1000==0)

@@ -51,3 +51,4 @@ motordriver\dac.o: ../Inc/adc.h
 motordriver\dac.o: ../Inc/./../User/protocol.h
 motordriver\dac.o: ../Inc/./../User/com.h
 motordriver\dac.o: ../Inc/./../User/protocol.h
+motordriver\dac.o: ../Inc/can.h

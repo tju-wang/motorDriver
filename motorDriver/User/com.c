@@ -1,5 +1,8 @@
 #include "com.h"
 
+/*CAN句柄*/
+extern CAN_HandleTypeDef hcan1;
+
 extern DAC_HandleTypeDef hdac;
 extern Motor_t M1;
 extern MotorCtrl_t M1Ctrl;
@@ -7,10 +10,14 @@ extern unsigned char gUsartFlag;
 //通讯硬件部分  数据收发
 static unsigned char Uart_counter = 0;  //计数
 static char UartStartFlag = 0;
-unsigned char UartRxData[9]; //缓存数据数组
-unsigned char UartRxData_2[9]; //缓存数据数组
+#define PROTOCLEN	9
+unsigned char UartRxData[PROTOCLEN]; //缓存数据数组
+unsigned char UartRxData_2[PROTOCLEN]; //缓存数据数组
 static unsigned int upwm;
-
+//角度预设  速度预设
+long long PrePos = 0;
+float PreSpeed = 0;
+char PreFlag = 0;
 
 /****************串口数据收发******************/
 void USART2Interrupt(char UartRxBuf)		//参数  状态控制串口
@@ -56,10 +63,14 @@ void USART2Interrupt(char UartRxBuf)		//参数  状态控制串口
 	}
 }
 
+
 //协议处理函数
 char ProtocAnalsis(void)
 {
 	unsigned int tempValue = 0;
+	if(UartRxData_2[0] != M1.motor_id && UartRxData_2[0] != BOARDCAST)
+		return HAL_ERROR;
+	/*协议解析*/
 	switch(UartRxData_2[1])
 	{
 		case CMD_EN:	{
@@ -75,12 +86,13 @@ char ProtocAnalsis(void)
 		}break;
 		case CMD_PWMSET:	{
 			upwm = UartRxData_2[2]*100+UartRxData_2[3];
+			M1.motorMode = WHEEL_MODE;
 			//正反转  PWM占空比   设置寄存器
-			if(UartRxData_2[0]!=MOTORSTOP)
+			if(UartRxData_2[4]!=MOTORSTOP)
 			{
-				if(UartRxData_2[0]==CLOCKWISE)	//顺时针
+				if(UartRxData_2[4]==CLOCKWISE)	//顺时针
 					setPWMClockwise(upwm);
-				else if(UartRxData_2[0]==ANTICLOCKWISE)	//逆时针
+				else if(UartRxData_2[4]==ANTICLOCKWISE)	//逆时针
 					setPWMAitClockwise(upwm);
 			}
 			else	//阻尼
@@ -90,25 +102,48 @@ char ProtocAnalsis(void)
 		}break;
 		case CMD_SPEEDSET:
 		{	//目标速度
-			M1Ctrl.speedTar = UartRxData_2[2]*10+UartRxData_2[3]*0.1;
+			M1.motorMode = SPEED_MODE;
 			//正反转  PWM占空比   设置寄存器
-//					if(UartRxData_2[0]!=MOTORSTOP)
-//					{
-//						if(UartRxData_2[0]==CLOCKWISE)	//顺时针
-//							setPWMClockwise(upwm);
-//						else if(UartRxData_2[0]==ANTICLOCKWISE)	//逆时针
-//							setPWMAitClockwise(upwm);
-//					}
-//					else	//阻尼
-//					{
-//						setZeroPWM();
-//					}
+			if(UartRxData_2[4]!=MOTORSTOP)
+			{
+				if(UartRxData_2[4]==CLOCKWISE)	//顺时针
+				{
+					M1Ctrl.ctrlDir = CLOCKWISE;
+					M1Ctrl.speedTar = UartRxData_2[2]*10+UartRxData_2[3]*0.1;
+				}
+				else if(UartRxData_2[4]==ANTICLOCKWISE)	//逆时针
+				{
+					M1Ctrl.ctrlDir = ANTICLOCKWISE;
+					M1Ctrl.speedTar = UartRxData_2[2]*10+UartRxData_2[3]*0.1;
+				}
+			}
+			else	//阻尼
+			{
+				setZeroPWM();
+			}
 		}break;
-//		case CMD_PLANTRAJ:
-//		{
-//			
-//			PlanTraj(gPosTar,70,1);
-//		}break;
+		case CMD_PLANTRAJ:
+		{
+			long long pos = (UartRxData_2[2] & (0x3F))*1000000+UartRxData_2[3]*10000+UartRxData_2[4]*100+UartRxData_2[5];
+			if((UartRxData_2[2] & (0x01<<7)) == 0)
+				pos = -pos;
+			float speed = UartRxData_2[6]*10 + UartRxData_2[7]*0.1;
+			PlanTraj(pos,speed,1);	//进行轨迹规划
+		}break;
+		case CMD_PRE_PLANTRAJ:
+		{
+			PrePos = (UartRxData_2[2] & (0x3F))*1000000+UartRxData_2[3]*10000+UartRxData_2[4]*100+UartRxData_2[5];
+			if((UartRxData_2[2] & (0x01<<7)) == 0)
+				PrePos = -PrePos;
+			PreSpeed = UartRxData_2[6]*10 + UartRxData_2[7]*0.1;
+			PreFlag = 1;
+		}break;
+		case CMD_PRE_EXEC:
+		{
+			if(PreFlag)	//已有预设位置与速度
+				PlanTraj(PrePos,PreSpeed,1);	//进行轨迹规划
+			PreFlag = 0;
+		}break;
 		case CMD_DACSET:
 		{
 			tempValue = UartRxData_2[2]*100+UartRxData_2[3];
@@ -135,23 +170,19 @@ char ProtocAnalsis(void)
 					break;
 			}	
 		}break;
-		case CMD_SENSOR:
-		{
-//				if(UartRxData_2[2]==0x10)		{	//不需要将传感器结果返回上位机
-//					SensorCtrl(UartRxData_2[3],UartRxData_2[4]);
-//				}
-			switch (UartRxData_2[2]){
-				case CTL_CALIBRATE:	//校准传感器
-				{
-				}break;
-				default :
-					break;
-			}
 			
-		}break;				
 		default :
 		{}break;
 	}
+	if(UartRxData_2[1] != CMD_PRE_PLANTRAJ)	{
+		PreFlag = 0;
+	}
+	//清理二级缓存
+	for(int m=0;m<PROTOCLEN;++m)
+	{
+		UartRxData_2[m] = 0;
+	}
+	
 	return HAL_OK;
 	
 }
@@ -160,6 +191,7 @@ char ProtocAnalsis(void)
 char UartSendData(unsigned char *data,unsigned int len)
 {
 	unsigned int i,summ = 0;
+	char Status = HAL_OK; 
 	if(len==DataFdbkNum)
 	{
 		for(i=1;i<DataFdbkNum-2;)	{
@@ -170,7 +202,23 @@ char UartSendData(unsigned char *data,unsigned int len)
 		data[0]  = 0x7B;
 		data[15] = 0x7D;
 	}
-	return (HAL_UART_Transmit(&huart2, (uint8_t *)data, len, 0xFFFF));
+	//选择串口 or CAN返回数据
+	if(CANorUSART == 1)	//CAN通讯
+	{
+		//CAN返回结果
+		Status = CANx_SendNormalData(&hcan1,0,(uint8_t *)data, len);
+	}
+	else if(CANorUSART == 2)
+	{
+		Status = HAL_UART_Transmit(&huart2, (uint8_t *)data, len, 0xFFFF);
+	}
+	else
+	{
+		Status = CANx_SendNormalData(&hcan1,0,(uint8_t *)data, len);
+		Status = HAL_UART_Transmit(&huart2, (uint8_t *)data, len, 0xFFFF);
+	}
+	
+	return HAL_OK;
 }
 
 

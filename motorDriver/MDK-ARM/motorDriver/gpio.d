@@ -51,3 +51,4 @@ motordriver\gpio.o: ../Inc/adc.h
 motordriver\gpio.o: ../Inc/./../User/protocol.h
 motordriver\gpio.o: ../Inc/./../User/com.h
 motordriver\gpio.o: ../Inc/./../User/protocol.h
+motordriver\gpio.o: ../Inc/can.h

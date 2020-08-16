@@ -50,4 +50,5 @@ motordriver\stm32f4xx_it.o: ../Inc/adc.h
 motordriver\stm32f4xx_it.o: ../Inc/./../User/protocol.h
 motordriver\stm32f4xx_it.o: ../Inc/./../User/com.h
 motordriver\stm32f4xx_it.o: ../Inc/./../User/protocol.h
+motordriver\stm32f4xx_it.o: ../Inc/can.h
 motordriver\stm32f4xx_it.o: ../Inc/stm32f4xx_it.h

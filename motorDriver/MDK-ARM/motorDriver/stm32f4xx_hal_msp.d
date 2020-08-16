@@ -50,3 +50,4 @@ motordriver\stm32f4xx_hal_msp.o: ../Inc/adc.h
 motordriver\stm32f4xx_hal_msp.o: ../Inc/./../User/protocol.h
 motordriver\stm32f4xx_hal_msp.o: ../Inc/./../User/com.h
 motordriver\stm32f4xx_hal_msp.o: ../Inc/./../User/protocol.h
+motordriver\stm32f4xx_hal_msp.o: ../Inc/can.h

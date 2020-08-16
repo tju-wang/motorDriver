@@ -5,7 +5,8 @@ extern Motor_t M1;
 MotorCtrl_t M1Ctrl;
 enum Process M1Process;
 extern long long int gPosTar;
-
+char tempChar[10] = {0};
+long long tempLL[10] = {0};
 char CtrlMotor(unsigned char mode)	//1ms调用一次
 {
 	static unsigned long int CtrlCounter = 0;
@@ -29,8 +30,22 @@ char CtrlMotor(unsigned char mode)	//1ms调用一次
 //			PosPID();
 			CalcSpeedTar(&M1Ctrl.speedTar,&M1Ctrl.ctrlDir);
 		}break;
+		case WHEEL_MODE:	//com.c中  接受到轮子模式指令，直接设置pwm
+		{
+			
+		}break;
+		case DIE_MODE:
+		{
+			setPWMClockwise(0);
+		}break;
+		case SPEED_MODE:
+		{
+			CalcSpeedPID(&M1Ctrl.CtrlPWM,M1Ctrl.speedTar,M1.speed);
+			SetMotorPWM(M1Ctrl.ctrlDir,M1Ctrl.CtrlPWM,M1Ctrl.CtrlLastPWM,&(M1Ctrl.CtrlLastPWM));	//直接给定了方向  应该比较后选择
+		}break;
+		
 	}
-	
+	return HAL_OK;
 }
 
 //计算期望速度  规划部分
@@ -49,7 +64,7 @@ char CtrlMotor(unsigned char mode)	//1ms调用一次
 char CalcSpeedTar(float *speedOut,unsigned char *dirOut)
 {
 	float speedTar;
-	long long int err = 0;
+	//long long int err = 0;
 	//先判断模式  依据当前位置与最后位置的位置差
 /*
 	err = M1Ctrl.PosTarget - M1.EnCounter;
@@ -108,6 +123,10 @@ char CalcSpeedTar(float *speedOut,unsigned char *dirOut)
 			speedTar = M1Ctrl.speedTar - M1Ctrl.speedReduce; 
 			if(speedTar<0)
 				speedTar = fabs(speedTar);
+//			if(llabs((M1Ctrl.PosTarget-M1.EnCounter)) < POSERR)	//防抖
+//			{
+//				speedTar = 0;
+//			}	
 		}break;
 		default:
 		{}break;	
@@ -118,23 +137,34 @@ char CalcSpeedTar(float *speedOut,unsigned char *dirOut)
 }
 
 //规划  设定目标位置、最大速度，加速度与减速度  只有在指令输入时做一次规划  在减速阶段重新规划  进入位置控制模式
-unsigned char PlanTraj(signed long long int posTar,float speedMax,unsigned char ch)
+unsigned char PlanTraj(signed long long int posTar,float speedMax,char ch)
 {
-	M1Ctrl.PosTarget = posTar;
-	M1Ctrl.speedMax = speedMax;
-	float spMax = RPreMin2CounterPerSec(speedMax);
+	static float spMax=0;
+	//float vPlan,tAll;
+	tempChar[0] = ch;
+	if(ch==1)
+	{
+		M1Ctrl.PosTarget = posTar;
+		M1Ctrl.speedMax = speedMax;			
+		spMax = RPreMin2CounterPerSec(speedMax);
+		M1Ctrl.acce = ACCLERATE;
+		M1.motorMode = CTRL_MODE;
+	}
 	long long posErr =  llabs((M1Ctrl.PosTarget-M1.EnCounter));	//本次规划的位置差  有可能是负数
-	float vPlan,tAll;	
-	M1Ctrl.acce = a1;
+	tempLL[0] = posErr;
+	
 	if(ch==1)
 	{
 		//求出减速时间  t = v/a
 		M1Ctrl.stepArr[2] = (spMax / M1Ctrl.acce) * 1000;	//减速时间  单位ms
 		M1Ctrl.stepArr[0] = (spMax / M1Ctrl.acce) * 1000;
 		
-		M1Ctrl.distance[2] = (M1Ctrl.stepArr[2]/1000.0f) * spMax * 0.5;	//减速三角形的面积
-		M1Ctrl.distance[0] = (M1Ctrl.stepArr[0]/1000.0f) * spMax * 0.5;	//加速三角形面积
+		M1Ctrl.distance[2] = ((double)M1Ctrl.stepArr[2]/1000.0f) * spMax * 0.5;	//减速三角形的面积
+		M1Ctrl.distance[0] = ((double)M1Ctrl.stepArr[0]/1000.0f) * spMax * 0.5;	//加速三角形面积
 		M1Ctrl.distance[1] = posErr - (M1Ctrl.distance[0]+M1Ctrl.distance[2]);
+		tempLL[1] = M1Ctrl.distance[0];
+		tempLL[2] = M1Ctrl.distance[1];
+		tempLL[3] = M1Ctrl.distance[2];
 		if(M1Ctrl.distance[1]<0)	{	//此时  没有匀速段  只有加减速段
 			M1Ctrl.distance[1] = 0;
 			M1Ctrl.distance[2] = posErr/2.0f;
@@ -176,7 +206,7 @@ unsigned char PlanTraj(signed long long int posTar,float speedMax,unsigned char 
 		}
 		//规划结束  切换到控制模式
 		M1.motorMode = CTRL_MODE;	
-		
+		M1Ctrl.ctrlProcess = 0;
 	}
 	else if(ch==2)
 	{
@@ -187,7 +217,7 @@ unsigned char PlanTraj(signed long long int posTar,float speedMax,unsigned char 
 				//M1Ctrl.stepArr[2] = (spMax / M1Ctrl.acce) * 1000;	//减速时间  单位ms
 				M1Ctrl.stepArr[0] = ((spMax- RPreMin2CounterPerSec(M1.speed))/ M1Ctrl.acce) * 1000;	//剩余加速所需的时间
 				//M1Ctrl.distance[2] = (M1Ctrl.stepArr[2]/1000.0f) * spMax * 0.5;	//减速三角形的面积
-				M1Ctrl.distance[0] = (M1Ctrl.stepArr[0]/1000.0f) * (spMax+RPreMin2CounterPerSec(M1.speed)) * 0.5;//剩余的加速梯形面积
+				M1Ctrl.distance[0] = ((double)M1Ctrl.stepArr[0]/1000.0f) * (spMax+RPreMin2CounterPerSec(M1.speed)) * 0.5;//剩余的加速梯形面积
 				M1Ctrl.distance[1] = posErr - (M1Ctrl.distance[0]+M1Ctrl.distance[2]);
 				
 				if(M1Ctrl.distance[1]<0)	{	//此时  没有匀速段  只有加减速段
@@ -238,7 +268,7 @@ unsigned char PlanTraj(signed long long int posTar,float speedMax,unsigned char 
 				}
 				else	{ 
 					M1Ctrl.stepArr[2] = 1;	//不能为0
-					M1Ctrl.speedReduce = CounterPerSec2RPreMin(M1.speed/0.01);
+					M1Ctrl.speedReduce = (double)CounterPerSec2RPreMin(M1.speed/0.01);
 				}
 				M1Ctrl.stepArr[0] = 0;
 				M1Ctrl.distance[0] = 0;//加速三角形面积
@@ -252,9 +282,7 @@ unsigned char PlanTraj(signed long long int posTar,float speedMax,unsigned char 
 			
 		}
 		M1Ctrl.stepCounter = M1Ctrl.ctrlStep;
-		//
-
-		M1.motorMode = CTRL_MODE;	
+		//M1.motorMode = CTRL_MODE;	
 	}
 
 	return HAL_OK;
@@ -274,69 +302,6 @@ unsigned char PosPID(long long int Curpos,long long int PosTar)
 {
 	return HAL_OK;
 }
-/*
-设定时间，目标位置，加速度，减速度的控制模式，可以在时间输入合理时保证执行时间   但需要实时规划速度
-//规划函数  输入当前位置  目标位置  规划总时间  当前速度  已知加速度  减速度等  得出规划节点 speedMax等
-//ch 决定调用位置  ch = 1 接收到指令时规划  ch = 2 在过程中规划
-unsigned char PlanTraj(signed long int posTar,int stepAll,unsigned char ch)
-{
-	M1Ctrl.PosTarget = posTar;
-	M1Ctrl.ctrlStep = stepAll;
-	M1Ctrl.stepCounter = M1Ctrl.ctrlStep;
-	
-	float posErr = (M1Ctrl.PosTarget-M1.EnCounter)/(4095.0f*REDUCTION);		//目标角度需要转过的圈数
-	long int s[3];	//分别是加速段  匀速段 减速段的位移
-	float vPlan,tAll,temp[2];
-	M1Ctrl.acce = a1;
-	if(posErr<0)	posErr = -posErr;
-	if(ch==1)	{	//接收到指令后规划  默认当前速度为0
-		//先判断是否是合理的规划  即是否可以匀速一段时间
-		if(stepAll > (2*posErr)/vMax)	//可以规划  存在匀速段
-		{
-			//解二次方程  vMax
-			tAll = stepAll/1000.0f;
-			temp[0] = (4*tAll*tAll-16*posErr/(M1Ctrl.acce)); 
-			if(temp[0]>0)
-			{
-				vPlan = 2*tAll - sqrt(temp[0]);
-				//vPlan = 2*tAll + sqrt(temp[0]);  二次方程的第二个解
-				if(vPlan<vMax)	//规定时间可以执行完
-				{
-					//计算梯形节点
-					M1Ctrl.acceStep = stepAll - (vPlan/(M1Ctrl.acce))*1000;
-					M1Ctrl.reduceStep = (vPlan/(M1Ctrl.acce))*1000;
-					M1Ctrl.speedMax = vPlan;
-					M1Ctrl.ctrlDir = CLOCKWISE;
-					
-				}
-				else	{	//此时不保证执行时间
-					vPlan = vMax;
-					//计算梯形节点
-					M1Ctrl.acceStep = stepAll - (vPlan/(M1Ctrl.acce))*1000;
-					M1Ctrl.reduceStep = (vPlan/(M1Ctrl.acce))*1000;
-					M1Ctrl.speedMax = vPlan;
-					M1Ctrl.ctrlDir = CLOCKWISE;
-				}
-				M1Ctrl.speedAcce = M1Ctrl.acce/(100*100);	//每10ms的加速值
-				M1Ctrl.speedReduce = M1Ctrl.acce/(100*100);
-			}
-			else	//没法规划  速度无解
-			{
-				
-			}
-		}	
-		else {	//按照没有匀速阶段的方法来计算
-			
-		}
-	}
-	else if(ch==2)	//按照调用过程中来规划
-	{
-		
-	}
-	
-}
-
-*/
 
 //跟随期望速度  增量式PI控制器   返回的是pwm增量
 char CalcSpeedPID(float *ctrl,float speedTar,float speedCur)
@@ -377,10 +342,14 @@ char SetMotorPWM(char dir,float pwm,float lastPWM,float *last)
 		Ctrl = 0;
 	}
 	//加posErr
-	if(llabs((M1Ctrl.PosTarget-M1.EnCounter)) < POSERR)	//防抖
+	if(M1.motorMode==CTRL_MODE)
 	{
-		Ctrl = 0;
-	}		
+		if(llabs((M1Ctrl.PosTarget-M1.EnCounter)) < POSERR)	//防抖
+		{
+			Ctrl = 0;
+		}
+	}
+			
 	*last = Ctrl;
 	switch(dir)
 	{

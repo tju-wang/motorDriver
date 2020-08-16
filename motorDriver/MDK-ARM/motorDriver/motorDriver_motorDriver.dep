@@ -1,7 +1,7 @@
 Dependencies for Project 'motorDriver', Target 'motorDriver': (DO NOT MODIFY !)
-F (startup_stm32f405xx.s)(0x5F2ECA78)(--cpu Cortex-M4.fp -g --apcs=interwork --pd "__MICROLIB SETA 1"-I.\RTE\_motorDriver-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include--pd "__UVISION_VERSION SETA 527" --pd "_RTE_ SETA 1" --pd "STM32F405xx SETA 1"--list startup_stm32f405xx.lst --xref -o motordriver\startup_stm32f405xx.o --depend motordriver\startup_stm32f405xx.d)
-F (../Src/main.c)(0x5F2ECA75)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_motorDriver-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="527" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o motordriver\main.o --omf_browse motordriver\main.crf --depend motordriver\main.d)
-I (../Inc/main.h)(0x5F2ECA75)
+F (startup_stm32f405xx.s)(0x5F340210)(--cpu Cortex-M4.fp -g --apcs=interwork --pd "__MICROLIB SETA 1"-I.\RTE\_motorDriver-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include--pd "__UVISION_VERSION SETA 527" --pd "_RTE_ SETA 1" --pd "STM32F405xx SETA 1"--list startup_stm32f405xx.lst --xref -o motordriver\startup_stm32f405xx.o --depend motordriver\startup_stm32f405xx.d)
+F (../Src/main.c)(0x5F37F95F)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_motorDriver-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="527" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o motordriver\main.o --omf_browse motordriver\main.crf --depend motordriver\main.d)
+I (../Inc/main.h)(0x5F316284)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5DAA818D)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5F2ECA75)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x5DAA818D)
@@ -37,22 +37,22 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x5DAA818D)
-I (../Inc/./../User/include.h)(0x5F2D4447)
+I (../Inc/./../User/include.h)(0x5F3941C0)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599ECD2C)
 I (../Inc/gpio.h)(0x5F2ECA74)
 I (../Inc/tim.h)(0x5F2ECA75)
 I (../Inc/./../User/tim_ctrl.h)(0x5E1882DE)
 I (../Inc/usart.h)(0x5F2ECA75)
-I (../Inc/./../User/motor.h)(0x5E1DCAC3)
+I (../Inc/./../User/motor.h)(0x5F33FB40)
 I (../Inc/./../User/stmflash.h)(0x5DBA9087)
 I (../Inc/adc.h)(0x5F2ECA74)
 I (../Inc/./../User/protocol.h)(0x5E09F213)
-I (../Inc/./../User/com.h)(0x5F2D4562)
+I (../Inc/./../User/com.h)(0x5F39480A)
 I (../Inc/can.h)(0x5F2ECA74)
 I (../Inc/dac.h)(0x5F2ECA74)
 F (../Src/gpio.c)(0x5F2ECA74)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_motorDriver-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="527" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o motordriver\gpio.o --omf_browse motordriver\gpio.crf --depend motordriver\gpio.d)
 I (../Inc/gpio.h)(0x5F2ECA74)
-I (../Inc/main.h)(0x5F2ECA75)
+I (../Inc/main.h)(0x5F316284)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5DAA818D)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5F2ECA75)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x5DAA818D)
@@ -88,19 +88,20 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x5DAA818D)
-I (../Inc/./../User/include.h)(0x5F2D4447)
+I (../Inc/./../User/include.h)(0x5F3941C0)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599ECD2C)
 I (../Inc/tim.h)(0x5F2ECA75)
 I (../Inc/./../User/tim_ctrl.h)(0x5E1882DE)
 I (../Inc/usart.h)(0x5F2ECA75)
-I (../Inc/./../User/motor.h)(0x5E1DCAC3)
+I (../Inc/./../User/motor.h)(0x5F33FB40)
 I (../Inc/./../User/stmflash.h)(0x5DBA9087)
 I (../Inc/adc.h)(0x5F2ECA74)
 I (../Inc/./../User/protocol.h)(0x5E09F213)
-I (../Inc/./../User/com.h)(0x5F2D4562)
+I (../Inc/./../User/com.h)(0x5F39480A)
+I (../Inc/can.h)(0x5F2ECA74)
 F (../Src/adc.c)(0x5F2ECA74)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_motorDriver-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="527" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o motordriver\adc.o --omf_browse motordriver\adc.crf --depend motordriver\adc.d)
 I (../Inc/adc.h)(0x5F2ECA74)
-I (../Inc/main.h)(0x5F2ECA75)
+I (../Inc/main.h)(0x5F316284)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5DAA818D)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5F2ECA75)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x5DAA818D)
@@ -136,19 +137,20 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x5DAA818D)
-I (../Inc/./../User/include.h)(0x5F2D4447)
+I (../Inc/./../User/include.h)(0x5F3941C0)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599ECD2C)
 I (../Inc/gpio.h)(0x5F2ECA74)
 I (../Inc/tim.h)(0x5F2ECA75)
 I (../Inc/./../User/tim_ctrl.h)(0x5E1882DE)
 I (../Inc/usart.h)(0x5F2ECA75)
-I (../Inc/./../User/motor.h)(0x5E1DCAC3)
+I (../Inc/./../User/motor.h)(0x5F33FB40)
 I (../Inc/./../User/stmflash.h)(0x5DBA9087)
 I (../Inc/./../User/protocol.h)(0x5E09F213)
-I (../Inc/./../User/com.h)(0x5F2D4562)
-F (../Src/can.c)(0x5F2ECA74)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_motorDriver-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="527" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o motordriver\can.o --omf_browse motordriver\can.crf --depend motordriver\can.d)
+I (../Inc/./../User/com.h)(0x5F39480A)
 I (../Inc/can.h)(0x5F2ECA74)
-I (../Inc/main.h)(0x5F2ECA75)
+F (../Src/can.c)(0x5F2ECF4C)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_motorDriver-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="527" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o motordriver\can.o --omf_browse motordriver\can.crf --depend motordriver\can.d)
+I (../Inc/can.h)(0x5F2ECA74)
+I (../Inc/main.h)(0x5F316284)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5DAA818D)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5F2ECA75)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x5DAA818D)
@@ -184,20 +186,20 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x5DAA818D)
-I (../Inc/./../User/include.h)(0x5F2D4447)
+I (../Inc/./../User/include.h)(0x5F3941C0)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599ECD2C)
 I (../Inc/gpio.h)(0x5F2ECA74)
 I (../Inc/tim.h)(0x5F2ECA75)
 I (../Inc/./../User/tim_ctrl.h)(0x5E1882DE)
 I (../Inc/usart.h)(0x5F2ECA75)
-I (../Inc/./../User/motor.h)(0x5E1DCAC3)
+I (../Inc/./../User/motor.h)(0x5F33FB40)
 I (../Inc/./../User/stmflash.h)(0x5DBA9087)
 I (../Inc/adc.h)(0x5F2ECA74)
 I (../Inc/./../User/protocol.h)(0x5E09F213)
-I (../Inc/./../User/com.h)(0x5F2D4562)
+I (../Inc/./../User/com.h)(0x5F39480A)
 F (../Src/dac.c)(0x5F2ECA74)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_motorDriver-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="527" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o motordriver\dac.o --omf_browse motordriver\dac.crf --depend motordriver\dac.d)
 I (../Inc/dac.h)(0x5F2ECA74)
-I (../Inc/main.h)(0x5F2ECA75)
+I (../Inc/main.h)(0x5F316284)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5DAA818D)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5F2ECA75)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x5DAA818D)
@@ -233,20 +235,21 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x5DAA818D)
-I (../Inc/./../User/include.h)(0x5F2D4447)
+I (../Inc/./../User/include.h)(0x5F3941C0)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599ECD2C)
 I (../Inc/gpio.h)(0x5F2ECA74)
 I (../Inc/tim.h)(0x5F2ECA75)
 I (../Inc/./../User/tim_ctrl.h)(0x5E1882DE)
 I (../Inc/usart.h)(0x5F2ECA75)
-I (../Inc/./../User/motor.h)(0x5E1DCAC3)
+I (../Inc/./../User/motor.h)(0x5F33FB40)
 I (../Inc/./../User/stmflash.h)(0x5DBA9087)
 I (../Inc/adc.h)(0x5F2ECA74)
 I (../Inc/./../User/protocol.h)(0x5E09F213)
-I (../Inc/./../User/com.h)(0x5F2D4562)
+I (../Inc/./../User/com.h)(0x5F39480A)
+I (../Inc/can.h)(0x5F2ECA74)
 F (../Src/tim.c)(0x5F2ECA74)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_motorDriver-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="527" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o motordriver\tim.o --omf_browse motordriver\tim.crf --depend motordriver\tim.d)
 I (../Inc/tim.h)(0x5F2ECA75)
-I (../Inc/main.h)(0x5F2ECA75)
+I (../Inc/main.h)(0x5F316284)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5DAA818D)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5F2ECA75)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x5DAA818D)
@@ -282,19 +285,20 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x5DAA818D)
-I (../Inc/./../User/include.h)(0x5F2D4447)
+I (../Inc/./../User/include.h)(0x5F3941C0)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599ECD2C)
 I (../Inc/gpio.h)(0x5F2ECA74)
 I (../Inc/./../User/tim_ctrl.h)(0x5E1882DE)
 I (../Inc/usart.h)(0x5F2ECA75)
-I (../Inc/./../User/motor.h)(0x5E1DCAC3)
+I (../Inc/./../User/motor.h)(0x5F33FB40)
 I (../Inc/./../User/stmflash.h)(0x5DBA9087)
 I (../Inc/adc.h)(0x5F2ECA74)
 I (../Inc/./../User/protocol.h)(0x5E09F213)
-I (../Inc/./../User/com.h)(0x5F2D4562)
+I (../Inc/./../User/com.h)(0x5F39480A)
+I (../Inc/can.h)(0x5F2ECA74)
 F (../Src/usart.c)(0x5F2ECA75)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_motorDriver-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="527" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o motordriver\usart.o --omf_browse motordriver\usart.crf --depend motordriver\usart.d)
 I (../Inc/usart.h)(0x5F2ECA75)
-I (../Inc/main.h)(0x5F2ECA75)
+I (../Inc/main.h)(0x5F316284)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5DAA818D)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5F2ECA75)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x5DAA818D)
@@ -330,18 +334,19 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x5DAA818D)
-I (../Inc/./../User/include.h)(0x5F2D4447)
+I (../Inc/./../User/include.h)(0x5F3941C0)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599ECD2C)
 I (../Inc/gpio.h)(0x5F2ECA74)
 I (../Inc/tim.h)(0x5F2ECA75)
 I (../Inc/./../User/tim_ctrl.h)(0x5E1882DE)
-I (../Inc/./../User/motor.h)(0x5E1DCAC3)
+I (../Inc/./../User/motor.h)(0x5F33FB40)
 I (../Inc/./../User/stmflash.h)(0x5DBA9087)
 I (../Inc/adc.h)(0x5F2ECA74)
 I (../Inc/./../User/protocol.h)(0x5E09F213)
-I (../Inc/./../User/com.h)(0x5F2D4562)
+I (../Inc/./../User/com.h)(0x5F39480A)
+I (../Inc/can.h)(0x5F2ECA74)
 F (../Src/stm32f4xx_it.c)(0x5F2ECA75)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_motorDriver-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="527" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o motordriver\stm32f4xx_it.o --omf_browse motordriver\stm32f4xx_it.crf --depend motordriver\stm32f4xx_it.d)
-I (../Inc/main.h)(0x5F2ECA75)
+I (../Inc/main.h)(0x5F316284)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5DAA818D)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5F2ECA75)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x5DAA818D)
@@ -377,20 +382,21 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x5DAA818D)
-I (../Inc/./../User/include.h)(0x5F2D4447)
+I (../Inc/./../User/include.h)(0x5F3941C0)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599ECD2C)
 I (../Inc/gpio.h)(0x5F2ECA74)
 I (../Inc/tim.h)(0x5F2ECA75)
 I (../Inc/./../User/tim_ctrl.h)(0x5E1882DE)
 I (../Inc/usart.h)(0x5F2ECA75)
-I (../Inc/./../User/motor.h)(0x5E1DCAC3)
+I (../Inc/./../User/motor.h)(0x5F33FB40)
 I (../Inc/./../User/stmflash.h)(0x5DBA9087)
 I (../Inc/adc.h)(0x5F2ECA74)
 I (../Inc/./../User/protocol.h)(0x5E09F213)
-I (../Inc/./../User/com.h)(0x5F2D4562)
+I (../Inc/./../User/com.h)(0x5F39480A)
+I (../Inc/can.h)(0x5F2ECA74)
 I (../Inc/stm32f4xx_it.h)(0x5F2ECA75)
 F (../Src/stm32f4xx_hal_msp.c)(0x5F2ECA75)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_motorDriver-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="527" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o motordriver\stm32f4xx_hal_msp.o --omf_browse motordriver\stm32f4xx_hal_msp.crf --depend motordriver\stm32f4xx_hal_msp.d)
-I (../Inc/main.h)(0x5F2ECA75)
+I (../Inc/main.h)(0x5F316284)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5DAA818D)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5F2ECA75)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x5DAA818D)
@@ -426,17 +432,18 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x5DAA818D)
-I (../Inc/./../User/include.h)(0x5F2D4447)
+I (../Inc/./../User/include.h)(0x5F3941C0)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599ECD2C)
 I (../Inc/gpio.h)(0x5F2ECA74)
 I (../Inc/tim.h)(0x5F2ECA75)
 I (../Inc/./../User/tim_ctrl.h)(0x5E1882DE)
 I (../Inc/usart.h)(0x5F2ECA75)
-I (../Inc/./../User/motor.h)(0x5E1DCAC3)
+I (../Inc/./../User/motor.h)(0x5F33FB40)
 I (../Inc/./../User/stmflash.h)(0x5DBA9087)
 I (../Inc/adc.h)(0x5F2ECA74)
 I (../Inc/./../User/protocol.h)(0x5E09F213)
-I (../Inc/./../User/com.h)(0x5F2D4562)
+I (../Inc/./../User/com.h)(0x5F39480A)
+I (../Inc/can.h)(0x5F2ECA74)
 F (../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c)(0x5DAA818D)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_motorDriver-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="527" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o motordriver\stm32f4xx_hal_adc.o --omf_browse motordriver\stm32f4xx_hal_adc.crf --depend motordriver\stm32f4xx_hal_adc.d)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5DAA818D)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5F2ECA75)
@@ -1229,12 +1236,12 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x5DAA818D)
-F (..\User\tim_ctrl.c)(0x5E1DC2C6)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_motorDriver-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="527" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o motordriver\tim_ctrl.o --omf_browse motordriver\tim_ctrl.crf --depend motordriver\tim_ctrl.d)
+F (..\User\tim_ctrl.c)(0x5F34025D)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_motorDriver-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="527" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o motordriver\tim_ctrl.o --omf_browse motordriver\tim_ctrl.crf --depend motordriver\tim_ctrl.d)
 I (..\User\tim_ctrl.h)(0x5E1882DE)
-I (..\User\include.h)(0x5F2D4447)
+I (..\User\include.h)(0x5F3941C0)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599ECD2C)
 I (../Inc/gpio.h)(0x5F2ECA74)
-I (../Inc/main.h)(0x5F2ECA75)
+I (../Inc/main.h)(0x5F316284)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5DAA818D)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5F2ECA75)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x5DAA818D)
@@ -1270,20 +1277,21 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x5DAA818D)
-I (../Inc/./../User/include.h)(0x5F2D4447)
+I (../Inc/./../User/include.h)(0x5F3941C0)
 I (../Inc/tim.h)(0x5F2ECA75)
 I (../Inc/usart.h)(0x5F2ECA75)
-I (..\User\motor.h)(0x5E1DCAC3)
+I (..\User\motor.h)(0x5F33FB40)
 I (..\User\stmflash.h)(0x5DBA9087)
 I (../Inc/adc.h)(0x5F2ECA74)
 I (..\User\protocol.h)(0x5E09F213)
-I (..\User\com.h)(0x5F2D4562)
-F (..\User\motor.c)(0x5F2D492F)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_motorDriver-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="527" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o motordriver\motor.o --omf_browse motordriver\motor.crf --depend motordriver\motor.d)
-I (..\User\motor.h)(0x5E1DCAC3)
-I (..\User\include.h)(0x5F2D4447)
+I (..\User\com.h)(0x5F39480A)
+I (../Inc/can.h)(0x5F2ECA74)
+F (..\User\motor.c)(0x5F394641)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_motorDriver-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="527" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o motordriver\motor.o --omf_browse motordriver\motor.crf --depend motordriver\motor.d)
+I (..\User\motor.h)(0x5F33FB40)
+I (..\User\include.h)(0x5F3941C0)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599ECD2C)
 I (../Inc/gpio.h)(0x5F2ECA74)
-I (../Inc/main.h)(0x5F2ECA75)
+I (../Inc/main.h)(0x5F316284)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5DAA818D)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5F2ECA75)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x5DAA818D)
@@ -1319,22 +1327,23 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x5DAA818D)
-I (../Inc/./../User/include.h)(0x5F2D4447)
+I (../Inc/./../User/include.h)(0x5F3941C0)
 I (../Inc/tim.h)(0x5F2ECA75)
 I (..\User\tim_ctrl.h)(0x5E1882DE)
 I (../Inc/usart.h)(0x5F2ECA75)
 I (..\User\stmflash.h)(0x5DBA9087)
 I (../Inc/adc.h)(0x5F2ECA74)
 I (..\User\protocol.h)(0x5E09F213)
-I (..\User\com.h)(0x5F2D4562)
+I (..\User\com.h)(0x5F39480A)
+I (../Inc/can.h)(0x5F2ECA74)
 I (C:\Keil_v5\ARM\ARMCC\include\math.h)(0x599ECD2E)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x599ECD2C)
-F (..\User\protocol.c)(0x5E0AF6D9)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_motorDriver-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="527" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o motordriver\protocol.o --omf_browse motordriver\protocol.crf --depend motordriver\protocol.d)
+F (..\User\protocol.c)(0x5F394733)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_motorDriver-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="527" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o motordriver\protocol.o --omf_browse motordriver\protocol.crf --depend motordriver\protocol.d)
 I (..\User\protocol.h)(0x5E09F213)
-I (..\User\include.h)(0x5F2D4447)
+I (..\User\include.h)(0x5F3941C0)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599ECD2C)
 I (../Inc/gpio.h)(0x5F2ECA74)
-I (../Inc/main.h)(0x5F2ECA75)
+I (../Inc/main.h)(0x5F316284)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5DAA818D)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5F2ECA75)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x5DAA818D)
@@ -1370,14 +1379,15 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x5DAA818D)
-I (../Inc/./../User/include.h)(0x5F2D4447)
+I (../Inc/./../User/include.h)(0x5F3941C0)
 I (../Inc/tim.h)(0x5F2ECA75)
 I (..\User\tim_ctrl.h)(0x5E1882DE)
 I (../Inc/usart.h)(0x5F2ECA75)
-I (..\User\motor.h)(0x5E1DCAC3)
+I (..\User\motor.h)(0x5F33FB40)
 I (..\User\stmflash.h)(0x5DBA9087)
 I (../Inc/adc.h)(0x5F2ECA74)
-I (..\User\com.h)(0x5F2D4562)
+I (../Inc/can.h)(0x5F2ECA74)
+I (..\User\com.h)(0x5F39480A)
 F (..\User\stmflash.c)(0x5DC2CA6B)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_motorDriver-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="527" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o motordriver\stmflash.o --omf_browse motordriver\stmflash.crf --depend motordriver\stmflash.d)
 I (..\User\stmflash.h)(0x5DBA9087)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5DAA818D)
@@ -1415,12 +1425,12 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x5DAA818D)
-F (..\User\com.c)(0x5F2D46C9)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_motorDriver-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="527" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o motordriver\com.o --omf_browse motordriver\com.crf --depend motordriver\com.d)
-I (..\User\com.h)(0x5F2D4562)
-I (..\User\include.h)(0x5F2D4447)
+F (..\User\com.c)(0x5F394953)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_motorDriver-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Users\Dell_tju\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="527" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o motordriver\com.o --omf_browse motordriver\com.crf --depend motordriver\com.d)
+I (..\User\com.h)(0x5F39480A)
+I (..\User\include.h)(0x5F3941C0)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599ECD2C)
 I (../Inc/gpio.h)(0x5F2ECA74)
-I (../Inc/main.h)(0x5F2ECA75)
+I (../Inc/main.h)(0x5F316284)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5DAA818D)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5F2ECA75)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x5DAA818D)
@@ -1456,11 +1466,12 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x5DAA818D)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x5DAA818D)
-I (../Inc/./../User/include.h)(0x5F2D4447)
+I (../Inc/./../User/include.h)(0x5F3941C0)
 I (../Inc/tim.h)(0x5F2ECA75)
 I (..\User\tim_ctrl.h)(0x5E1882DE)
 I (../Inc/usart.h)(0x5F2ECA75)
-I (..\User\motor.h)(0x5E1DCAC3)
+I (..\User\motor.h)(0x5F33FB40)
 I (..\User\stmflash.h)(0x5DBA9087)
 I (../Inc/adc.h)(0x5F2ECA74)
 I (..\User\protocol.h)(0x5E09F213)
+I (../Inc/can.h)(0x5F2ECA74)

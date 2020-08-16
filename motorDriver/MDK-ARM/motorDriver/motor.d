@@ -50,5 +50,6 @@ motordriver\motor.o: ../Inc/adc.h
 motordriver\motor.o: ..\User\protocol.h
 motordriver\motor.o: ..\User\com.h
 motordriver\motor.o: ..\User\protocol.h
+motordriver\motor.o: ../Inc/can.h
 motordriver\motor.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 motordriver\motor.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h

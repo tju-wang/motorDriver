@@ -51,3 +51,4 @@ motordriver\tim.o: ../Inc/adc.h
 motordriver\tim.o: ../Inc/./../User/protocol.h
 motordriver\tim.o: ../Inc/./../User/com.h
 motordriver\tim.o: ../Inc/./../User/protocol.h
+motordriver\tim.o: ../Inc/can.h

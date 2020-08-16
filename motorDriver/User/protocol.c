@@ -337,8 +337,8 @@ void FlashFDBK(char num)
 		Summ = Summ%100;
 		UartFeedBackData[14] = Summ;
 		UartFeedBackData[15] = 0x7D;
-		
-		HAL_UART_Transmit(&huart2, (uint8_t *)&UartFeedBackData, DataFdbkNum, 0xFFFF);
+		UartSendData(UartFeedBackData,16);
+		//HAL_UART_Transmit(&huart2, (uint8_t *)&UartFeedBackData, DataFdbkNum, 0xFFFF);
 }
 void DataCoverInt2Char(unsigned char *pNum1,unsigned char *pNum2,int pNum_Int)
 {

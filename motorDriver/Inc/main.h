@@ -105,6 +105,9 @@ void StartUp(void);
 
 void clearArr(unsigned char *arr,unsigned int len);
 void ClearFloatArr(float *data,unsigned int len);
+
+void CAN_User_Init(CAN_HandleTypeDef* hcan);
+uint8_t CANx_SendNormalData(CAN_HandleTypeDef* hcan,uint16_t ID,uint8_t *pData,uint16_t Len);
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

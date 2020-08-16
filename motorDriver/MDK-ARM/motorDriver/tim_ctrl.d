@@ -50,3 +50,4 @@ motordriver\tim_ctrl.o: ../Inc/adc.h
 motordriver\tim_ctrl.o: ..\User\protocol.h
 motordriver\tim_ctrl.o: ..\User\com.h
 motordriver\tim_ctrl.o: ..\User\protocol.h
+motordriver\tim_ctrl.o: ../Inc/can.h

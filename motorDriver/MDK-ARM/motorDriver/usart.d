@@ -51,3 +51,4 @@ motordriver\usart.o: ../Inc/adc.h
 motordriver\usart.o: ../Inc/./../User/protocol.h
 motordriver\usart.o: ../Inc/./../User/com.h
 motordriver\usart.o: ../Inc/./../User/protocol.h
+motordriver\usart.o: ../Inc/can.h

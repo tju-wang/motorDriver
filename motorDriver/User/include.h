@@ -21,7 +21,7 @@
 #define         WHEEL_MODE              (0x14)          //轮子模式 
 
 #define 		CURRENT_MODE			(0x15)			//力矩模式
-
+#define			SPEED_MODE				(0x17)			//精确速度模式
 
 
 #define         ProductNum					(*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*0)))		//32bit    	1                        
@@ -37,11 +37,11 @@
 #define			PWM_MAX						((*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*8))))	
 #define			PWM_MIN						((*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*9))))	//		10
 
-#define			POSERR						((float)(*(unsigned char*)(uint32_t)(ADDR_FLASH_SECTOR6+(4*10)))/1000)			
-#define			InertiaPara					((float)(*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*11)))/1000)	
+#define			POSERR						((float)(*(unsigned char*)(uint32_t)(ADDR_FLASH_SECTOR6+(4*10))))			
+#define			ACCLERATE					((float)(*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*11)))*1000)	//规划阶段加速度	
 
 //#define			Sensor_Para					(0.02)
-#define			Sensor_Para					((float)(*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*12)))/1000)	
+#define			CANorUSART					((*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*12))))	
 #define			Smooth_Para					((float)(*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*13)))/1000)
 //传感器  PID运算
 #define			sensor_P					((float)(*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*14)))/1000)	
@@ -67,7 +67,7 @@
 #include "stmflash.h"
 #include "adc.h"
 #include "protocol.h"
-
+#include "can.h"
 
 #endif
 

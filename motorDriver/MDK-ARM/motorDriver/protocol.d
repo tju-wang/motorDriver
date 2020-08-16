@@ -48,4 +48,5 @@ motordriver\protocol.o: ..\User\motor.h
 motordriver\protocol.o: ..\User\stmflash.h
 motordriver\protocol.o: ../Inc/adc.h
 motordriver\protocol.o: ..\User\protocol.h
+motordriver\protocol.o: ../Inc/can.h
 motordriver\protocol.o: ..\User\com.h
