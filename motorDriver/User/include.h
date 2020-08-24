@@ -42,20 +42,20 @@
 
 //#define			Sensor_Para					(0.02)
 #define			CANorUSART					((*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*12))))	
-#define			Smooth_Para					((float)(*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*13)))/1000)
+#define			Free1						((float)(*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*13)))/1000)
 //´«¸ÐÆ÷  PIDÔËËã
-#define			sensor_P					((float)(*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*14)))/1000)	
-#define			sensor_I					((float)(*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*15)))/1000)		
-#define			sensor_D					((float)(*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*16)))/1000) 
+#define			Free2						((float)(*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*14)))/1000)	
+#define			Free3						((float)(*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*15)))/1000)		
+#define			Free4						((float)(*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*16)))/1000) 
 	
-#define			SOFTWARE1					(*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*17))) 
-#define			HARDWARE2					(*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*18))) 
-#define			SOFTWARE2					(*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*19))) 
-#define			HARDWARE3					(*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*20))) 
-#define			SOFTWARE3					(*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*21)))
+#define			Free5						(*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*17))) 
+#define			Free6						(*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*18))) 
+#define			Free7						(*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*19))) 
+#define			Free8						(*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*20))) 
+#define			Free9						(*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*21)))
 	
-#define			HARDWARE					(*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*22))) 
-#define			SOFTWARE					(*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*23)))
+#define			Free10						(*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*22))) 
+#define			Free11						(*(unsigned int *)(uint32_t)(ADDR_FLASH_SECTOR6+(4*23)))
 
 #include "stdio.h"
 #include "gpio.h"

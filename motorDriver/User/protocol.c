@@ -312,33 +312,33 @@ void FlashFDBK(char num)
 	for(mm=0;mm<FLASHSIZE;mm++)	{
 				FLASH_Store[mm] = (*(unsigned int *)(FLASH_USER_START_ADDR+4*mm));	//mm为定位变量
 			}
-		if(part>0&&part<5)	{	//part 1-4
-			
-			for(mm=0;mm<6;mm++)	{
-				DataCoverInt2Char(&numm1,&numm2,(int)FLASH_Store[(part-1)*6 + mm]);
-				UartFeedBackData[mm*2+2]	= (unsigned char)numm1; 
-				UartFeedBackData[mm*2+3] = (unsigned char)numm2;
-			}
+	if(part>0&&part<5)	{	//part 1-4
 		
-			}
-		else	{
-			for(mm=0;mm<6;mm++)	{
-				UartFeedBackData[mm*2+2]= (unsigned char)0; 
-				UartFeedBackData[mm*2+3] = (unsigned char)0;
-			}
+		for(mm=0;mm<6;mm++)	{
+			DataCoverInt2Char(&numm1,&numm2,(int)FLASH_Store[(part-1)*6 + mm]);
+			UartFeedBackData[mm*2+2]	= (unsigned char)numm1; 
+			UartFeedBackData[mm*2+3] = (unsigned char)numm2;
 		}
 	
-		UartFeedBackData[0] = 0x7B;
-		UartFeedBackData[1]	= 0x30;		//FLASH回读
-		Summ = 0;
-		for(ii=1; ii<DataFdbkNum-2;ii++)	{
-			Summ +=UartFeedBackData[ii];
 		}
-		Summ = Summ%100;
-		UartFeedBackData[14] = Summ;
-		UartFeedBackData[15] = 0x7D;
-		UartSendData(UartFeedBackData,16);
-		//HAL_UART_Transmit(&huart2, (uint8_t *)&UartFeedBackData, DataFdbkNum, 0xFFFF);
+	else	{
+		for(mm=0;mm<6;mm++)	{
+			UartFeedBackData[mm*2+2]= (unsigned char)0; 
+			UartFeedBackData[mm*2+3] = (unsigned char)0;
+		}
+	}
+	
+	UartFeedBackData[0] = 0x7B;
+	UartFeedBackData[1]	= 0x30;		//FLASH回读
+	Summ = 0;
+	for(ii=1; ii<DataFdbkNum-2;ii++)	{
+		Summ +=UartFeedBackData[ii];
+	}
+	Summ = Summ%100;
+	UartFeedBackData[14] = Summ;
+	UartFeedBackData[15] = 0x7D;
+	UartSendData(UartFeedBackData,16);
+	//HAL_UART_Transmit(&huart2, (uint8_t *)&UartFeedBackData, DataFdbkNum, 0xFFFF);
 }
 void DataCoverInt2Char(unsigned char *pNum1,unsigned char *pNum2,int pNum_Int)
 {
